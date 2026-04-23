@@ -34,6 +34,10 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
+# Bare install is the full package; [all] is provided for ecosystem-wide
+# consistency so `pip install scitex-*[all]` works uniformly.
+all = []
+
 dev = ["pytest", "pytest-cov", "scitex-dev>=0.7.0"]
 
 [project.urls]
