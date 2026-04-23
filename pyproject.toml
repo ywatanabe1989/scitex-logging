@@ -34,7 +34,7 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest", "pytest-cov"]
+dev = ["pytest", "pytest-cov", "scitex-dev>=0.7.0"]
 
 [project.urls]
 Homepage = "https://github.com/ywatanabe1989/scitex-logging"
