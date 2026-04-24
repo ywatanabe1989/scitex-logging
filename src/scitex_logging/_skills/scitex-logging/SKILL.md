@@ -52,3 +52,8 @@ rule and empirical verification table.
 - [02_python-api.md](02_python-api.md) — config, levels, warnings, errors
 
 No CLI, no MCP tools.
+
+
+## Environment
+
+- [10_env-vars.md](10_env-vars.md) — SCITEX_* env vars read by scitex-logging at runtime
