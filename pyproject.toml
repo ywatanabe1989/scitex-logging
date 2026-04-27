@@ -34,11 +34,21 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-# Bare install is the full package; [all] is provided for ecosystem-wide
-# consistency so `pip install scitex-*[all]` works uniformly.
-all = []
-
-dev = ["pytest", "pytest-cov", "scitex-dev>=0.7.0"]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "scitex-dev>=0.7.0",
+]
+docs = [
+    "sphinx>=7.0",
+    "sphinx-rtd-theme>=2.0",
+    "myst-parser>=2.0",
+    "sphinx-copybutton>=0.5",
+    "sphinx-autodoc-typehints>=1.25",
+]
+all = [
+    "scitex-logging[dev,docs]",
+]
 
 [project.urls]
 Homepage = "https://github.com/ywatanabe1989/scitex-logging"
