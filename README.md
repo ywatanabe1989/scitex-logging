@@ -1,5 +1,16 @@
 # scitex-logging
 
+<!-- scitex-badges:start -->
+[![PyPI](https://img.shields.io/pypi/v/scitex-logging.svg)](https://pypi.org/project/scitex-logging/)
+[![Python](https://img.shields.io/pypi/pyversions/scitex-logging.svg)](https://pypi.org/project/scitex-logging/)
+[![Tests](https://github.com/ywatanabe1989/scitex-logging/actions/workflows/test.yml/badge.svg)](https://github.com/ywatanabe1989/scitex-logging/actions/workflows/test.yml)
+[![Install Test](https://github.com/ywatanabe1989/scitex-logging/actions/workflows/install-test.yml/badge.svg)](https://github.com/ywatanabe1989/scitex-logging/actions/workflows/install-test.yml)
+[![Coverage](https://codecov.io/gh/ywatanabe1989/scitex-logging/graph/badge.svg)](https://codecov.io/gh/ywatanabe1989/scitex-logging)
+[![Docs](https://readthedocs.org/projects/scitex-logging/badge/?version=latest)](https://scitex-logging.readthedocs.io/en/latest/)
+[![License: AGPL v3](https://img.shields.io/badge/license-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+<!-- scitex-badges:end -->
+
+
 Logging utilities for the SciTeX ecosystem.
 
 > **Interfaces:** Python ⭐⭐⭐ (primary) · CLI — · MCP — · Skills ⭐⭐ · Hook — · HTTP —
