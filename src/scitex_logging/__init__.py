@@ -157,6 +157,7 @@ configure(level=level, enable_file=True, enable_console=True, capture_prints=Fal
 
 # Export public API
 __all__ = [
+    "__version__",
     # Core logging functions
     "getLogger",
     # Log levels
