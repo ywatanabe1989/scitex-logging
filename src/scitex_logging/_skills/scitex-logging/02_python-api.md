@@ -1,3 +1,9 @@
+---
+name: python-api
+description: scitex-logging — Python API — see file body for details.
+tags: [scitex-logging, scitex-package]
+---
+
 <!-- 02_python-api.md -->
 
 # scitex-logging — Python API

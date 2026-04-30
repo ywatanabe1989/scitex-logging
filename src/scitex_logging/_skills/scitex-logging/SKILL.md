@@ -10,6 +10,7 @@ interfaces:
   skills: 2
   hook: 0
   http: 0
+tags: [scitex-logging, scitex-package]
 ---
 
 # scitex-logging

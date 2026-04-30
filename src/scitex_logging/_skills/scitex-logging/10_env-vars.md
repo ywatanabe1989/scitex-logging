@@ -1,6 +1,7 @@
 ---
 name: scitex-logging-env-vars
 description: Environment variables read by scitex-logging at import / runtime. Follow SCITEX_<MODULE>_* convention — see general/10_arch-environment-variables.md.
+tags: [scitex-logging, scitex-package]
 ---
 
 # scitex-logging — Environment Variables

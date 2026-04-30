@@ -1,3 +1,9 @@
+---
+name: quick-start
+description: scitex-logging — Quick Start — see file body for details.
+tags: [scitex-logging, scitex-package]
+---
+
 <!-- 01_quick-start.md -->
 
 # scitex-logging — Quick Start
