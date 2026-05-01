@@ -10,13 +10,9 @@
 [![License: AGPL v3](https://img.shields.io/badge/license-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 <!-- scitex-badges:end -->
 
-
 Logging utilities for the SciTeX ecosystem.
 
-> **Interfaces:** Python ⭐⭐⭐ (primary) · CLI — · MCP — · Skills ⭐⭐ · Hook — · HTTP —
-
 ## Problem and Solution
-
 
 | # | Problem | Solution |
 |---|---------|----------|
