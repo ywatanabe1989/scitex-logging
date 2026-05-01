@@ -78,7 +78,7 @@ log.render("out.html")
 
 `scitex-logging` is part of [**SciTeX**](https://scitex.ai). Install via
 the umbrella with `pip install scitex[logging]` to use as
-`scitex.logging` (Python). No CLI subcommand — this package is import-only.
+`scitex.logging` (Python).
 
 >Four Freedoms for Research
 >
