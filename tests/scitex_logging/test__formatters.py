@@ -9,6 +9,7 @@ import pytest
 _formatters_path = os.path.join(
     os.path.dirname(__file__),
     "..",
+    "..",
     "src",
     "scitex_logging",
     "_formatters.py",
@@ -199,7 +200,7 @@ class TestForceColor:
     @pytest.fixture(autouse=True)
     def setup_pythonpath(self):
         """Set up PYTHONPATH for subprocess tests."""
-        project_root = os.path.join(os.path.dirname(__file__), "..")
+        project_root = os.path.join(os.path.dirname(__file__), "..", "..")
         self.project_root = os.path.abspath(project_root)
         self.src_dir = os.path.join(self.project_root, "src")
         existing_pythonpath = os.environ.get("PYTHONPATH", "")
@@ -230,7 +231,7 @@ print('FORCE_COLOR:', mod.FORCE_COLOR)
             ],
             capture_output=True,
             text=True,
-            cwd=os.path.join(os.path.dirname(__file__), ".."),
+            cwd=os.path.join(os.path.dirname(__file__), "..", ".."),
         )
         assert "FORCE_COLOR: True" in result.stdout
 
@@ -319,7 +320,7 @@ print('FORCE_COLOR:', mod.FORCE_COLOR)
                 ],
                 capture_output=True,
                 text=True,
-                cwd=os.path.join(os.path.dirname(__file__), ".."),
+                cwd=os.path.join(os.path.dirname(__file__), "..", ".."),
             )
             assert "FORCE_COLOR: True" in result.stdout, f"Failed for value: {value}"
 
@@ -345,7 +346,7 @@ print('FORCE_COLOR:', mod.FORCE_COLOR)
                 ],
                 capture_output=True,
                 text=True,
-                cwd=os.path.join(os.path.dirname(__file__), ".."),
+                cwd=os.path.join(os.path.dirname(__file__), "..", ".."),
             )
             assert "FORCE_COLOR: False" in result.stdout, f"Failed for value: {value}"
 
