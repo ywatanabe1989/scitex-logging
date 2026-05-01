@@ -53,6 +53,7 @@ all = [
 Homepage = "https://github.com/ywatanabe1989/scitex-logging"
 Repository = "https://github.com/ywatanabe1989/scitex-logging"
 Issues = "https://github.com/ywatanabe1989/scitex-logging/issues"
+Documentation = "https://scitex-logging.readthedocs.io"
 
 [project.entry-points."scitex_dev.docs"]
 scitex-logging = "scitex_logging"
