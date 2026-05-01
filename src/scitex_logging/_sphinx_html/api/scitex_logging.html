@@ -1,0 +1,1184 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>scitex_logging &mdash; SciTeX Logging v0.1.3</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=360bc84d"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Quickstart" href="../quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SciTeX Logging
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#basic-installation">Basic Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#development">Development</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">scitex_logging</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.getLogger"><code class="docutils literal notranslate"><span class="pre">getLogger()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.configure"><code class="docutils literal notranslate"><span class="pre">configure()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.set_level"><code class="docutils literal notranslate"><span class="pre">set_level()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.get_level"><code class="docutils literal notranslate"><span class="pre">get_level()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.enable_file_logging"><code class="docutils literal notranslate"><span class="pre">enable_file_logging()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.is_file_logging_enabled"><code class="docutils literal notranslate"><span class="pre">is_file_logging_enabled()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.get_log_path"><code class="docutils literal notranslate"><span class="pre">get_log_path()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.Tee"><code class="docutils literal notranslate"><span class="pre">Tee</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.Tee.__init__"><code class="docutils literal notranslate"><span class="pre">Tee.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.Tee.write"><code class="docutils literal notranslate"><span class="pre">Tee.write()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.Tee.flush"><code class="docutils literal notranslate"><span class="pre">Tee.flush()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.Tee.isatty"><code class="docutils literal notranslate"><span class="pre">Tee.isatty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.Tee.fileno"><code class="docutils literal notranslate"><span class="pre">Tee.fileno()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.Tee.buffer"><code class="docutils literal notranslate"><span class="pre">Tee.buffer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.Tee.close"><code class="docutils literal notranslate"><span class="pre">Tee.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.tee"><code class="docutils literal notranslate"><span class="pre">tee()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.log_to_file"><code class="docutils literal notranslate"><span class="pre">log_to_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.SciTeXWarning"><code class="docutils literal notranslate"><span class="pre">SciTeXWarning</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.UnitWarning"><code class="docutils literal notranslate"><span class="pre">UnitWarning</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.StyleWarning"><code class="docutils literal notranslate"><span class="pre">StyleWarning</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.SciTeXDeprecationWarning"><code class="docutils literal notranslate"><span class="pre">SciTeXDeprecationWarning</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.PerformanceWarning"><code class="docutils literal notranslate"><span class="pre">PerformanceWarning</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.DataLossWarning"><code class="docutils literal notranslate"><span class="pre">DataLossWarning</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.warn"><code class="docutils literal notranslate"><span class="pre">warn()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.filterwarnings"><code class="docutils literal notranslate"><span class="pre">filterwarnings()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.resetwarnings"><code class="docutils literal notranslate"><span class="pre">resetwarnings()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.warn_deprecated"><code class="docutils literal notranslate"><span class="pre">warn_deprecated()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.warn_performance"><code class="docutils literal notranslate"><span class="pre">warn_performance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.warn_data_loss"><code class="docutils literal notranslate"><span class="pre">warn_data_loss()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.SciTeXError"><code class="docutils literal notranslate"><span class="pre">SciTeXError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.SciTeXError.__init__"><code class="docutils literal notranslate"><span class="pre">SciTeXError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.ConfigurationError"><code class="docutils literal notranslate"><span class="pre">ConfigurationError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.ConfigFileNotFoundError"><code class="docutils literal notranslate"><span class="pre">ConfigFileNotFoundError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.ConfigFileNotFoundError.__init__"><code class="docutils literal notranslate"><span class="pre">ConfigFileNotFoundError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.ConfigKeyError"><code class="docutils literal notranslate"><span class="pre">ConfigKeyError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.ConfigKeyError.__init__"><code class="docutils literal notranslate"><span class="pre">ConfigKeyError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.IOError"><code class="docutils literal notranslate"><span class="pre">IOError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.FileFormatError"><code class="docutils literal notranslate"><span class="pre">FileFormatError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.FileFormatError.__init__"><code class="docutils literal notranslate"><span class="pre">FileFormatError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.SaveError"><code class="docutils literal notranslate"><span class="pre">SaveError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.SaveError.__init__"><code class="docutils literal notranslate"><span class="pre">SaveError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.LoadError"><code class="docutils literal notranslate"><span class="pre">LoadError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.LoadError.__init__"><code class="docutils literal notranslate"><span class="pre">LoadError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.ScholarError"><code class="docutils literal notranslate"><span class="pre">ScholarError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.SearchError"><code class="docutils literal notranslate"><span class="pre">SearchError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.SearchError.__init__"><code class="docutils literal notranslate"><span class="pre">SearchError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.EnrichmentError"><code class="docutils literal notranslate"><span class="pre">EnrichmentError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.EnrichmentError.__init__"><code class="docutils literal notranslate"><span class="pre">EnrichmentError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.PDFDownloadError"><code class="docutils literal notranslate"><span class="pre">PDFDownloadError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.PDFDownloadError.__init__"><code class="docutils literal notranslate"><span class="pre">PDFDownloadError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.DOIResolutionError"><code class="docutils literal notranslate"><span class="pre">DOIResolutionError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.DOIResolutionError.__init__"><code class="docutils literal notranslate"><span class="pre">DOIResolutionError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.PDFExtractionError"><code class="docutils literal notranslate"><span class="pre">PDFExtractionError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.PDFExtractionError.__init__"><code class="docutils literal notranslate"><span class="pre">PDFExtractionError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.BibTeXEnrichmentError"><code class="docutils literal notranslate"><span class="pre">BibTeXEnrichmentError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.BibTeXEnrichmentError.__init__"><code class="docutils literal notranslate"><span class="pre">BibTeXEnrichmentError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.TranslatorError"><code class="docutils literal notranslate"><span class="pre">TranslatorError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.TranslatorError.__init__"><code class="docutils literal notranslate"><span class="pre">TranslatorError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.AuthenticationError"><code class="docutils literal notranslate"><span class="pre">AuthenticationError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.AuthenticationError.__init__"><code class="docutils literal notranslate"><span class="pre">AuthenticationError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.PlottingError"><code class="docutils literal notranslate"><span class="pre">PlottingError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.FigureNotFoundError"><code class="docutils literal notranslate"><span class="pre">FigureNotFoundError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.FigureNotFoundError.__init__"><code class="docutils literal notranslate"><span class="pre">FigureNotFoundError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.AxisError"><code class="docutils literal notranslate"><span class="pre">AxisError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.AxisError.__init__"><code class="docutils literal notranslate"><span class="pre">AxisError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.DataError"><code class="docutils literal notranslate"><span class="pre">DataError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.ShapeError"><code class="docutils literal notranslate"><span class="pre">ShapeError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.ShapeError.__init__"><code class="docutils literal notranslate"><span class="pre">ShapeError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.DTypeError"><code class="docutils literal notranslate"><span class="pre">DTypeError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.DTypeError.__init__"><code class="docutils literal notranslate"><span class="pre">DTypeError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.PathError"><code class="docutils literal notranslate"><span class="pre">PathError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.InvalidPathError"><code class="docutils literal notranslate"><span class="pre">InvalidPathError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.InvalidPathError.__init__"><code class="docutils literal notranslate"><span class="pre">InvalidPathError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.PathNotFoundError"><code class="docutils literal notranslate"><span class="pre">PathNotFoundError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.PathNotFoundError.__init__"><code class="docutils literal notranslate"><span class="pre">PathNotFoundError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.TemplateError"><code class="docutils literal notranslate"><span class="pre">TemplateError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.TemplateViolationError"><code class="docutils literal notranslate"><span class="pre">TemplateViolationError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.TemplateViolationError.__init__"><code class="docutils literal notranslate"><span class="pre">TemplateViolationError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.NNError"><code class="docutils literal notranslate"><span class="pre">NNError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.ModelError"><code class="docutils literal notranslate"><span class="pre">ModelError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.ModelError.__init__"><code class="docutils literal notranslate"><span class="pre">ModelError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.StatsError"><code class="docutils literal notranslate"><span class="pre">StatsError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.TestError"><code class="docutils literal notranslate"><span class="pre">TestError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scitex_logging.TestError.__init__"><code class="docutils literal notranslate"><span class="pre">TestError.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.check_path"><code class="docutils literal notranslate"><span class="pre">check_path()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.check_file_exists"><code class="docutils literal notranslate"><span class="pre">check_file_exists()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scitex_logging.check_shape_compatibility"><code class="docutils literal notranslate"><span class="pre">check_shape_compatibility()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SciTeX Logging</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">scitex_logging</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ywatanabe1989/scitex-logging/blob/develop/docs/sphinx/api/scitex_logging.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-scitex_logging">
+<span id="scitex-logging"></span><h1>scitex_logging<a class="headerlink" href="#module-scitex_logging" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.getLogger">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">getLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/logging.html#getLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.getLogger" title="Link to this definition"></a></dt>
+<dd><p>Return a logger with the specified name, creating it if necessary.</p>
+<p>If no name is specified, return the root logger.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.configure">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">configure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_console</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_prints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_file_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10485760</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_config.html#configure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.configure" title="Link to this definition"></a></dt>
+<dd><p>Configure logging for SciTeX with both console and file output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>level</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – Log level (string or logging constant)</p></li>
+<li><p><strong>log_file</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span>) – Path to log file (default: ~/.scitex/logs/scitex-YYYY-MM-DD.log)</p></li>
+<li><p><strong>enable_file</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Whether to enable file logging</p></li>
+<li><p><strong>enable_console</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Whether to enable console logging</p></li>
+<li><p><strong>capture_prints</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Whether to capture print() statements to logs</p></li>
+<li><p><strong>max_file_size</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Maximum size of log file before rotation (default: 10MB)</p></li>
+<li><p><strong>backup_count</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of backup files to keep (default: 5)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.set_level">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">set_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_config.html#set_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.set_level" title="Link to this definition"></a></dt>
+<dd><p>Set global log level for all SciTeX loggers.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.get_level">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">get_level</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_config.html#get_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.get_level" title="Link to this definition"></a></dt>
+<dd><p>Get current global log level.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.enable_file_logging">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">enable_file_logging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_config.html#enable_file_logging"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.enable_file_logging" title="Link to this definition"></a></dt>
+<dd><p>Enable or disable file logging globally.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.is_file_logging_enabled">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">is_file_logging_enabled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_config.html#is_file_logging_enabled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.is_file_logging_enabled" title="Link to this definition"></a></dt>
+<dd><p>Check if file logging is enabled.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.get_log_path">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">get_log_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_config.html#get_log_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.get_log_path" title="Link to this definition"></a></dt>
+<dd><p>Get the current log file path.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="scitex_logging.Tee">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">Tee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_Tee.html#Tee"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.Tee" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.Tee.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_Tee.html#Tee.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.Tee.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.Tee.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_Tee.html#Tee.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.Tee.write" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.Tee.flush">
+<span class="sig-name descname"><span class="pre">flush</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_Tee.html#Tee.flush"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.Tee.flush" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.Tee.isatty">
+<span class="sig-name descname"><span class="pre">isatty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_Tee.html#Tee.isatty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.Tee.isatty" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.Tee.fileno">
+<span class="sig-name descname"><span class="pre">fileno</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_Tee.html#Tee.fileno"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.Tee.fileno" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="scitex_logging.Tee.buffer">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">buffer</span></span><a class="headerlink" href="#scitex_logging.Tee.buffer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.Tee.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_Tee.html#Tee.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.Tee.close" title="Link to this definition"></a></dt>
+<dd><p>Explicitly close the log file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.tee">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">tee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_Tee.html#tee"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.tee" title="Link to this definition"></a></dt>
+<dd><p>Redirects stdout and stderr to both console and log files.</p>
+<div class="admonition-example admonition">
+<p class="admonition-title">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">tee</span><span class="p">(</span><span class="n">sys</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;abc&quot;</span><span class="p">)</span>  <span class="c1"># stdout</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># stderr</span>
+</pre></div>
+</div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sys_module</strong> (<em>module</em>) – System module containing stdout and stderr</p></li>
+<li><p><strong>sdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Directory for log files</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>default=True</em>) – Whether to print log file locations</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Wrapped stdout and stderr objects</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[Any, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.log_to_file">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">log_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formatter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_context.html#log_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.log_to_file" title="Link to this definition"></a></dt>
+<dd><p>Context manager to temporarily log all output to a specific file.</p>
+<dl>
+<dt>Usage:</dt><dd><p>from scitex import logging
+logger = logging.getLogger(__name__)</p>
+<dl class="simple">
+<dt>with logging.log_to_file(“/path/to/log.txt”):</dt><dd><p>logger.info(“This goes to both console and /path/to/log.txt”)
+logger.success(“This too!”)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a>]</span>) – Path to log file</p></li>
+<li><p><strong>level</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Logging level for this handler (default: DEBUG)</p></li>
+<li><p><strong>mode</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – File mode (‘w’ for overwrite, ‘a’ for append)</p></li>
+<li><p><strong>formatter</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Formatter" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Formatter</span></code></a>]</span>) – Custom formatter (default: SciTeXFileFormatter)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>The file handler (can be ignored)</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.SciTeXWarning">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">SciTeXWarning</span></span><a class="reference internal" href="../_modules/scitex_logging/_warnings.html#SciTeXWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.SciTeXWarning" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#UserWarning" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserWarning</span></code></a></p>
+<p>Base warning class for all SciTeX warnings.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.UnitWarning">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">UnitWarning</span></span><a class="reference internal" href="../_modules/scitex_logging/_warnings.html#UnitWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.UnitWarning" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.SciTeXWarning" title="scitex_logging._warnings.SciTeXWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">SciTeXWarning</span></code></a></p>
+<p>Warning for axis label unit issues (educational for SI conventions).</p>
+<p>Raised when:
+- Axis labels are missing units
+- Units use parentheses instead of brackets (SI prefers [])
+- Units use division instead of negative exponents (m/s vs m·s⁻¹)</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.StyleWarning">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">StyleWarning</span></span><a class="reference internal" href="../_modules/scitex_logging/_warnings.html#StyleWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.StyleWarning" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.SciTeXWarning" title="scitex_logging._warnings.SciTeXWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">SciTeXWarning</span></code></a></p>
+<p>Warning for style/formatting issues.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.SciTeXDeprecationWarning">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">SciTeXDeprecationWarning</span></span><a class="reference internal" href="../_modules/scitex_logging/_warnings.html#SciTeXDeprecationWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.SciTeXDeprecationWarning" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.SciTeXWarning" title="scitex_logging._warnings.SciTeXWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">SciTeXWarning</span></code></a></p>
+<p>Warning for deprecated SciTeX features.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.PerformanceWarning">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">PerformanceWarning</span></span><a class="reference internal" href="../_modules/scitex_logging/_warnings.html#PerformanceWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.PerformanceWarning" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.SciTeXWarning" title="scitex_logging._warnings.SciTeXWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">SciTeXWarning</span></code></a></p>
+<p>Warning for performance issues.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.DataLossWarning">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">DataLossWarning</span></span><a class="reference internal" href="../_modules/scitex_logging/_warnings.html#DataLossWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.DataLossWarning" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.SciTeXWarning" title="scitex_logging._warnings.SciTeXWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">SciTeXWarning</span></code></a></p>
+<p>Warning for potential data loss.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.warn">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">warn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'scitex_logging._warnings.SciTeXWarning'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stacklevel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_warnings.html#warn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.warn" title="Link to this definition"></a></dt>
+<dd><p>Emit a warning (like warnings.warn but integrated with scitex.logging).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Warning message</p></li>
+<li><p><strong>category</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.14)"><em>type</em></a>) – Warning category (default: SciTeXWarning)</p></li>
+<li><p><strong>stacklevel</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Stack level for source location (default: 2 = caller)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">scitex.logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">logging</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scitex.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnitWarning</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logging</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;X axis has no units&quot;</span><span class="p">,</span> <span class="n">UnitWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.filterwarnings">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">filterwarnings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'scitex_logging._warnings.SciTeXWarning'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_warnings.html#filterwarnings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.filterwarnings" title="Link to this definition"></a></dt>
+<dd><p>Control warning behavior (like warnings.filterwarnings).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>action</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – One of:
+- “ignore”: Never show this warning
+- “error”: Raise as exception
+- “always”: Always show
+- “default”: Show first occurrence per location
+- “once”: Show only once total
+- “module”: Show once per module</p></li>
+<li><p><strong>category</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.14)"><em>type</em></a>) – Warning category (default: SciTeXWarning = all)</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Regex pattern to match warning message (not implemented yet)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">scitex.logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">logging</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scitex.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnitWarning</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logging</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">UnitWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.resetwarnings">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">resetwarnings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_warnings.html#resetwarnings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.resetwarnings" title="Link to this definition"></a></dt>
+<dd><p>Reset all warning filters to default behavior.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.warn_deprecated">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">warn_deprecated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_warnings.html#warn_deprecated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.warn_deprecated" title="Link to this definition"></a></dt>
+<dd><p>Issue a deprecation warning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.warn_performance">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">warn_performance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suggestion</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_warnings.html#warn_performance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.warn_performance" title="Link to this definition"></a></dt>
+<dd><p>Issue a performance warning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.warn_data_loss">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">warn_data_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">detail</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_warnings.html#warn_data_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.warn_data_loss" title="Link to this definition"></a></dt>
+<dd><p>Issue a data loss warning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.SciTeXError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">SciTeXError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suggestion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#SciTeXError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.SciTeXError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>Base Exception class for all SciTeX errors.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.SciTeXError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suggestion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#SciTeXError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.SciTeXError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.ConfigurationError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">ConfigurationError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suggestion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#ConfigurationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.ConfigurationError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.SciTeXError" title="scitex_logging._errors.SciTeXError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SciTeXError</span></code></a></p>
+<p>Raised when there are issues with SciTeX configuration.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.ConfigFileNotFoundError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">ConfigFileNotFoundError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#ConfigFileNotFoundError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.ConfigFileNotFoundError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.ConfigurationError" title="scitex_logging._errors.ConfigurationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigurationError</span></code></a></p>
+<p>Raised when a required configuration file is not found.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.ConfigFileNotFoundError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#ConfigFileNotFoundError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.ConfigFileNotFoundError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.ConfigKeyError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">ConfigKeyError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">available_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#ConfigKeyError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.ConfigKeyError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.ConfigurationError" title="scitex_logging._errors.ConfigurationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigurationError</span></code></a></p>
+<p>Raised when a required configuration key is missing.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.ConfigKeyError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">available_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#ConfigKeyError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.ConfigKeyError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.IOError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">IOError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suggestion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#IOError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.IOError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.SciTeXError" title="scitex_logging._errors.SciTeXError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SciTeXError</span></code></a></p>
+<p>Base class for input/output related errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.FileFormatError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">FileFormatError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actual_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#FileFormatError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.FileFormatError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.IOError" title="scitex_logging._errors.IOError"><code class="xref py py-class docutils literal notranslate"><span class="pre">IOError</span></code></a></p>
+<p>Raised when file format is not supported or incorrect.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.FileFormatError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actual_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#FileFormatError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.FileFormatError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.SaveError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">SaveError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#SaveError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.SaveError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.IOError" title="scitex_logging._errors.IOError"><code class="xref py py-class docutils literal notranslate"><span class="pre">IOError</span></code></a></p>
+<p>Raised when saving data fails.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.SaveError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#SaveError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.SaveError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.LoadError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">LoadError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#LoadError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.LoadError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.IOError" title="scitex_logging._errors.IOError"><code class="xref py py-class docutils literal notranslate"><span class="pre">IOError</span></code></a></p>
+<p>Raised when loading data fails.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.LoadError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#LoadError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.LoadError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.ScholarError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">ScholarError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suggestion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#ScholarError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.ScholarError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.SciTeXError" title="scitex_logging._errors.SciTeXError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SciTeXError</span></code></a></p>
+<p>Base class for scholar module errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.SearchError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">SearchError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#SearchError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.SearchError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.ScholarError" title="scitex_logging._errors.ScholarError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScholarError</span></code></a></p>
+<p>Raised when paper search fails.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.SearchError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#SearchError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.SearchError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.EnrichmentError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">EnrichmentError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paper_title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#EnrichmentError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.EnrichmentError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.ScholarError" title="scitex_logging._errors.ScholarError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScholarError</span></code></a></p>
+<p>Raised when paper enrichment fails.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.EnrichmentError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paper_title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#EnrichmentError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.EnrichmentError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.PDFDownloadError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">PDFDownloadError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#PDFDownloadError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.PDFDownloadError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.ScholarError" title="scitex_logging._errors.ScholarError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScholarError</span></code></a></p>
+<p>Raised when PDF download fails.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.PDFDownloadError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#PDFDownloadError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.PDFDownloadError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.DOIResolutionError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">DOIResolutionError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#DOIResolutionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.DOIResolutionError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.ScholarError" title="scitex_logging._errors.ScholarError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScholarError</span></code></a></p>
+<p>Raised when DOI resolution fails.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.DOIResolutionError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#DOIResolutionError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.DOIResolutionError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.PDFExtractionError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">PDFExtractionError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#PDFExtractionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.PDFExtractionError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.ScholarError" title="scitex_logging._errors.ScholarError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScholarError</span></code></a></p>
+<p>Raised when PDF text extraction fails.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.PDFExtractionError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#PDFExtractionError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.PDFExtractionError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.BibTeXEnrichmentError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">BibTeXEnrichmentError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bibtex_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#BibTeXEnrichmentError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.BibTeXEnrichmentError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.ScholarError" title="scitex_logging._errors.ScholarError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScholarError</span></code></a></p>
+<p>Raised when BibTeX enrichment fails.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.BibTeXEnrichmentError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bibtex_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#BibTeXEnrichmentError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.BibTeXEnrichmentError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.TranslatorError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">TranslatorError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">translator_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#TranslatorError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.TranslatorError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.ScholarError" title="scitex_logging._errors.ScholarError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScholarError</span></code></a></p>
+<p>Raised when Zotero translator operations fail.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.TranslatorError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">translator_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#TranslatorError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.TranslatorError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.AuthenticationError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">AuthenticationError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#AuthenticationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.AuthenticationError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.ScholarError" title="scitex_logging._errors.ScholarError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScholarError</span></code></a></p>
+<p>Raised when authentication fails.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.AuthenticationError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#AuthenticationError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.AuthenticationError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.PlottingError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">PlottingError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suggestion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#PlottingError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.PlottingError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.SciTeXError" title="scitex_logging._errors.SciTeXError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SciTeXError</span></code></a></p>
+<p>Base class for plotting-related errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.FigureNotFoundError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">FigureNotFoundError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#FigureNotFoundError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.FigureNotFoundError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.PlottingError" title="scitex_logging._errors.PlottingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PlottingError</span></code></a></p>
+<p>Raised when attempting to operate on a non-existent figure.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.FigureNotFoundError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#FigureNotFoundError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.FigureNotFoundError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.AxisError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">AxisError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#AxisError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.AxisError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.PlottingError" title="scitex_logging._errors.PlottingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PlottingError</span></code></a></p>
+<p>Raised when there are issues with plot axes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.AxisError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#AxisError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.AxisError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.DataError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">DataError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suggestion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#DataError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.DataError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.SciTeXError" title="scitex_logging._errors.SciTeXError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SciTeXError</span></code></a></p>
+<p>Base class for data processing errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.ShapeError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">ShapeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expected_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actual_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#ShapeError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.ShapeError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.DataError" title="scitex_logging._errors.DataError"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataError</span></code></a></p>
+<p>Raised when data shapes are incompatible.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.ShapeError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expected_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actual_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#ShapeError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.ShapeError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.DTypeError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">DTypeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expected_dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actual_dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#DTypeError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.DTypeError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.DataError" title="scitex_logging._errors.DataError"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataError</span></code></a></p>
+<p>Raised when data types are incompatible.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.DTypeError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expected_dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actual_dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#DTypeError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.DTypeError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.PathError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">PathError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suggestion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#PathError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.PathError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.SciTeXError" title="scitex_logging._errors.SciTeXError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SciTeXError</span></code></a></p>
+<p>Base class for path-related errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.InvalidPathError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">InvalidPathError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#InvalidPathError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.InvalidPathError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.PathError" title="scitex_logging._errors.PathError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PathError</span></code></a></p>
+<p>Raised when a path is invalid or doesn’t follow SciTeX conventions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.InvalidPathError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#InvalidPathError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.InvalidPathError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.PathNotFoundError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">PathNotFoundError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#PathNotFoundError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.PathNotFoundError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.PathError" title="scitex_logging._errors.PathError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PathError</span></code></a></p>
+<p>Raised when a required path doesn’t exist.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.PathNotFoundError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#PathNotFoundError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.PathNotFoundError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.TemplateError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">TemplateError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suggestion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#TemplateError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.TemplateError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.SciTeXError" title="scitex_logging._errors.SciTeXError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SciTeXError</span></code></a></p>
+<p>Base class for template-related errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.TemplateViolationError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">TemplateViolationError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">violation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#TemplateViolationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.TemplateViolationError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.TemplateError" title="scitex_logging._errors.TemplateError"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemplateError</span></code></a></p>
+<p>Raised when SciTeX template is not followed.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.TemplateViolationError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">violation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#TemplateViolationError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.TemplateViolationError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.NNError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">NNError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suggestion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#NNError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.NNError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.SciTeXError" title="scitex_logging._errors.SciTeXError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SciTeXError</span></code></a></p>
+<p>Base class for neural network module errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.ModelError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">ModelError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#ModelError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.ModelError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.NNError" title="scitex_logging._errors.NNError"><code class="xref py py-class docutils literal notranslate"><span class="pre">NNError</span></code></a></p>
+<p>Raised when there are issues with neural network models.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.ModelError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#ModelError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.ModelError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.StatsError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">StatsError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suggestion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#StatsError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.StatsError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.SciTeXError" title="scitex_logging._errors.SciTeXError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SciTeXError</span></code></a></p>
+<p>Base class for statistics module errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scitex_logging.TestError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">TestError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#TestError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.TestError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scitex_logging.StatsError" title="scitex_logging._errors.StatsError"><code class="xref py py-class docutils literal notranslate"><span class="pre">StatsError</span></code></a></p>
+<p>Raised when statistical tests fail.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scitex_logging.TestError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#TestError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.TestError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SciTeX error with detailed information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The error message</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional context information (e.g., file paths, variable values)</p></li>
+<li><p><strong>suggestion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suggested fix or action</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.check_path">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">check_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#check_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.check_path" title="Link to this definition"></a></dt>
+<dd><p>Validate a path according to SciTeX conventions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.check_file_exists">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">check_file_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#check_file_exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.check_file_exists" title="Link to this definition"></a></dt>
+<dd><p>Check if a file exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scitex_logging.check_shape_compatibility">
+<span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">check_shape_compatibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_errors.html#check_shape_compatibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.check_shape_compatibility" title="Link to this definition"></a></dt>
+<dd><p>Check if two shapes are compatible for an operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../quickstart.html" class="btn btn-neutral float-left" title="Quickstart" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024-2026, Yusuke Watanabe.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
