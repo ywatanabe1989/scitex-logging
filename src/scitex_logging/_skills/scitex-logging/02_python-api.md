@@ -1,7 +1,8 @@
 ---
-name: python-api
-description: scitex-logging — Python API — see file body for details.
-tags: [scitex-logging, scitex-package]
+description: |
+  [TOPIC] Python API
+  [DETAILS] Logger config, levels, warnings, guards, and SciTeXError exception hierarchy.
+tags: [scitex-logging-python-api]
 ---
 
 <!-- 02_python-api.md -->

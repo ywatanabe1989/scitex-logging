@@ -1,7 +1,8 @@
 ---
-name: quick-start
-description: scitex-logging — Quick Start — see file body for details.
-tags: [scitex-logging, scitex-package]
+description: |
+  [TOPIC] Quick Start
+  [DETAILS] Get a logger, log at any level (SUCCESS/FAIL included), enable file output.
+tags: [scitex-logging-quick-start]
 ---
 
 <!-- 01_quick-start.md -->

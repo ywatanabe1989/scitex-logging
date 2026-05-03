@@ -1,16 +1,17 @@
 ---
 name: scitex-logging
-description: Enhanced Python logging + warnings + exceptions for SciTeX — stdlib-compatible wrapper with SUCCESS/FAIL levels, auto file output, structured category warnings, and a 30+ class `SciTeXError` hierarchy. Public API — logger (`getLogger`, `configure`, `set_level`/`get_level`, `log_to_file`/`enable_file_logging`/`is_file_logging_enabled`/`get_log_path`, `tee`/`Tee`, levels `DEBUG`/`INFO`/`SUCCESS`/`WARNING`/`FAIL`/`ERROR`/`CRITICAL`), warnings (`warn`, `warn_data_loss`, `warn_deprecated`, `warn_performance`, `filterwarnings`, `resetwarnings`, `SciTeXWarning`, `SciTeXDeprecationWarning`, `DataLossWarning`, `PerformanceWarning`, `StyleWarning`, `UnitWarning`), guards (`check_path`, `check_file_exists`, `check_shape_compatibility`), LLM sub-namespace (`scitex_logging.llm`), exception hierarchy (`SciTeXError` root + `IOError`/`LoadError`/`SaveError`/`FileFormatError`/`PathError`/`PathNotFoundError`/`InvalidPathError`/`ConfigurationError`/`ConfigFileNotFoundError`/`ConfigKeyError`/`DataError`/`DTypeError`/`ShapeError`/`AxisError`/`ModelError`/`NNError`/`PlottingError`/`FigureNotFoundError`/`StyleError`/`StatsError`/`ScholarError`/`AuthenticationError`/`DOIResolutionError`/`EnrichmentError`/`BibTeXEnrichmentError`/`PDFDownloadError`/`PDFExtractionError`/`SearchError`/`TemplateError`/`TemplateViolationError`/`TranslatorError`/`TestError`). Env var `SCITEX_LOGGING_LEVEL` sets default level at import. No CLI, no MCP tools. Drop-in replacement for stdlib `logging` + `warnings` + raising `ValueError`/`RuntimeError`/`IOError`, plus ad-hoc `loguru` / `structlog` / `rich.logging` setup + hand-rolled domain exception classes + stdout/stderr tee scripts. Use whenever the user asks to "get a logger for this module", "log SUCCESS or FAIL with a distinct level", "tee stdout to a log file", "raise a typed SciTeX error instead of ValueError", "emit a deprecation or data-loss warning", "validate a path before using it", "configure logging from SCITEX_LOGGING_LEVEL", or mentions `scitex.logging`, `SciTeXError`, `SUCCESS` log level, `Tee`.
-user-invocable: false
+description: |
+  [WHAT] Enhanced Python logging + warnings + 30+ class `SciTeXError` exception hierarchy — stdlib-compatible wrapper with SUCCESS/FAIL levels, auto file output, and structured category warnings.
+  [WHEN] Getting a logger, logging SUCCESS/FAIL, teeing stdout to a log file, raising a typed SciTeX error, emitting a deprecation/data-loss warning, or configuring via `SCITEX_LOGGING_LEVEL`.
+  [HOW] `from scitex_logging import getLogger, configure, Tee, SciTeXError, warn_deprecated, ...` — drop-in stdlib replacement.
+tags: [scitex-logging]
 primary_interface: python
 interfaces:
   python: 3
   cli: 0
   mcp: 0
   skills: 2
-  hook: 0
   http: 0
-tags: [scitex-logging, scitex-package]
 ---
 
 # scitex-logging
