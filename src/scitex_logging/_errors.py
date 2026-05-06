@@ -9,9 +9,9 @@ All SciTeX exceptions are defined here for unified error handling.
 Re-exported from scitex.logging for backwards compatibility.
 
 Usage:
-    from scitex.logging import SciTeXError, SaveError, LoadError
+    from scitex_logging import SciTeXError, SaveError, LoadError
     # or (backwards compatible)
-    from scitex.logging import SciTeXError, SaveError, LoadError
+    from scitex_logging import SciTeXError, SaveError, LoadError
 """
 
 from typing import Optional, Union

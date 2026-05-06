@@ -34,7 +34,7 @@ def log_to_file(
     """Context manager to temporarily log all output to a specific file.
 
     Usage:
-        from scitex import logging
+        import scitex_logging as logging
         logger = logging.getLogger(__name__)
 
         with logging.log_to_file("/path/to/log.txt"):
@@ -71,7 +71,7 @@ def log_to_file(
     # Log where output is going (lazy import to avoid circular dependency)
     def _log_info():
         try:
-            from scitex import logging
+            import scitex_logging as logging
 
             logger = logging.getLogger(__name__)
             logger.debug(f"Logging to: {file_path}")
@@ -90,7 +90,7 @@ def log_to_file(
         # Log completion (lazy import)
         def _log_saved():
             try:
-                from scitex import logging
+                import scitex_logging as logging
 
                 logger = logging.getLogger(__name__)
                 logger.debug(f"Log saved: {file_path}")

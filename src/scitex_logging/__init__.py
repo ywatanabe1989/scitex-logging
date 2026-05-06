@@ -27,11 +27,11 @@ ensuring consistent logging across the SciTeX package.
 
 Migration:
     # OLD (deprecated)
-    from scitex import logging
+    import scitex_logging as logging
     logger = logging.getLogger(__name__)
 
     # NEW (recommended)
-    from scitex import logging
+    import scitex_logging as logging
     logger = logging.getLogger(__name__)
 
 Usage:
