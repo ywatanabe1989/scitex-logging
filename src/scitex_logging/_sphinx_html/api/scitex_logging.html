@@ -375,7 +375,7 @@
 <span class="sig-prename descclassname"><span class="pre">scitex_logging.</span></span><span class="sig-name descname"><span class="pre">log_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formatter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_logging/_context.html#log_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_logging.log_to_file" title="Link to this definition"></a></dt>
 <dd><p>Context manager to temporarily log all output to a specific file.</p>
 <dl>
-<dt>Usage:</dt><dd><p>from scitex import logging
+<dt>Usage:</dt><dd><p>import scitex_logging as logging
 logger = logging.getLogger(__name__)</p>
 <dl class="simple">
 <dt>with logging.log_to_file(“/path/to/log.txt”):</dt><dd><p>logger.info(“This goes to both console and /path/to/log.txt”)

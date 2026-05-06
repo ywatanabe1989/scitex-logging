@@ -257,7 +257,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Context manager to temporarily log all output to a specific file.</span>
 
 <span class="sd">    Usage:</span>
-<span class="sd">        from scitex import logging</span>
+<span class="sd">        import scitex_logging as logging</span>
 <span class="sd">        logger = logging.getLogger(__name__)</span>
 
 <span class="sd">        with logging.log_to_file(&quot;/path/to/log.txt&quot;):</span>
@@ -294,7 +294,7 @@
     <span class="c1"># Log where output is going (lazy import to avoid circular dependency)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_log_info</span><span class="p">():</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span><span class="w"> </span><span class="nn">scitex</span><span class="w"> </span><span class="kn">import</span> <span class="n">logging</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">scitex_logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">logging</span>
 
             <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Logging to: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -313,7 +313,7 @@
         <span class="c1"># Log completion (lazy import)</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">_log_saved</span><span class="p">():</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="kn">from</span><span class="w"> </span><span class="nn">scitex</span><span class="w"> </span><span class="kn">import</span> <span class="n">logging</span>
+                <span class="kn">import</span><span class="w"> </span><span class="nn">scitex_logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">logging</span>
 
                 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Log saved: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
