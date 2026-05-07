@@ -76,6 +76,47 @@ log.render("out.html")
 
 </details>
 
+## Architecture
+
+```
+scitex_logging/
+├── _config.py            ← `configure()` entry point + level registration
+├── _levels.py            ← SUCCESS / FAIL custom log levels
+├── _tee.py               ← stdout/stderr Tee context-manager
+├── exceptions/           ← 30+ typed `SciTeXError` subclasses
+│   ├── _data.py          ← ShapeError, DTypeError, ...
+│   ├── _config.py        ← ConfigKeyError, ...
+│   └── _network.py       ← PDFDownloadError, ...
+├── warnings/             ← `warn_deprecated`, `warn_performance`
+└── llm/                  ← Claude / LLM session-log parsers
+```
+
+## Demo
+
+```mermaid
+flowchart LR
+    A[script.py] -->|getLogger| B[scitex_logging]
+    B --> C{level}
+    C -->|SUCCESS| D[green log + Tee → run.log]
+    C -->|FAIL| E[red log + Tee → run.log]
+    C -->|ERROR| F[typed SciTeXError raised]
+```
+
+```python
+import logging, scitex_logging as sxl
+
+sxl.configure(level=sxl.INFO, enable_file=True)
+log = logging.getLogger(__name__)
+
+log.success("model converged")    # green
+log.fail("validation failed")     # red, distinct from ERROR
+```
+
+```
+2026-05-07 12:00:00 SUCCESS  model converged
+2026-05-07 12:00:01 FAIL     validation failed
+```
+
 ## Part of SciTeX
 
 `scitex-logging` is part of [**SciTeX**](https://scitex.ai). Install via
