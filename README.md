@@ -9,7 +9,7 @@
 <p align="center"><b>Logging utilities for SciTeX — SUCCESS/FAIL log levels, typed exception hierarchy, Tee context-manager.</b></p>
 
 <p align="center">
-  <a href="https://scitex-logging.readthedocs.io/">Full Documentation</a> · <code>pip install scitex-logging</code>
+  <a href="https://scitex-logging.readthedocs.io/">Full Documentation</a> · <code>uv pip install scitex-logging[all]</code>
 </p>
 
 <!-- scitex-badges:start -->
