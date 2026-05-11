@@ -1,4 +1,4 @@
-"""Tests for scitex_logging.llm.__main__ CLI."""
+"""Tests for scitex_logging.llm._cli."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 import pytest
 
-from scitex_logging.llm.__main__ import main
+from scitex_logging.llm._cli import main
 
 
 def _run(argv):
