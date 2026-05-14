@@ -5,6 +5,7 @@
 import logging
 import logging.handlers
 import os
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -19,10 +20,56 @@ def _get_scitex_dir() -> Path:
     return Path.home() / ".scitex"
 
 
+class LazyStderrStreamHandler(logging.StreamHandler):
+    """StreamHandler that resolves ``sys.stderr`` on every emit.
+
+    Stock ``StreamHandler()`` caches a reference to ``sys.stderr`` at
+    construction time. If a caller temporarily replaces ``sys.stderr``
+    (e.g. via a stdio-capture context manager) and the captured stream
+    is later closed, subsequent emits raise
+    ``ValueError: I/O operation on closed file.`` and Python's logging
+    module surfaces a "Logging error" traceback even when the application
+    code completed cleanly.
+
+    By re-resolving ``sys.stderr`` per emit (and per ``flush`` for
+    correctness), the handler always writes to whatever ``sys.stderr``
+    points at *right now* — which is what users of the standard library
+    ``print`` already get. Stays in lockstep with ``contextlib.redirect_stderr``,
+    pytest's ``capsys`` / ``capfd``, click's isolated streams, and the
+    scitex-dev audit pipeline.
+    """
+
+    def __init__(self, level=logging.NOTSET):
+        # Pass `None` so the base initialiser uses ``sys.stderr`` at
+        # construction time; we'll override ``self.stream`` per-emit below
+        # via the ``stream`` property.
+        super().__init__(stream=None)
+        self.setLevel(level)
+
+    # The base class stores the stream in ``self.stream``; intercept via
+    # a property so each ``.write`` / ``.flush`` call gets the current
+    # ``sys.stderr``. Setter is a no-op so ``setStream`` calls from the
+    # base class don't pin a stale reference.
+    @property
+    def stream(self):  # type: ignore[override]
+        return sys.stderr
+
+    @stream.setter
+    def stream(self, _value):
+        # Intentionally ignore: we always want the live ``sys.stderr``.
+        # ``logging.StreamHandler.__init__`` and ``setStream`` will try to
+        # assign here; we want both to be no-ops.
+        return
+
+
 def create_console_handler(level=logging.INFO):
-    """Create a console handler with SciTeX formatting."""
-    handler = logging.StreamHandler()
-    handler.setLevel(level)
+    """Create a console handler with SciTeX formatting.
+
+    Uses ``LazyStderrStreamHandler`` so the handler stays in sync with
+    ``sys.stderr`` even when callers temporarily redirect it (capture
+    helpers, click's isolated streams, etc.).
+    """
+    handler = LazyStderrStreamHandler(level=level)
     handler.setFormatter(SciTeXConsoleFormatter())
     return handler
 
