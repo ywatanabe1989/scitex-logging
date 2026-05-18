@@ -10,6 +10,8 @@ umbrella's deep-import surface) surface as a hard failure here — not
 as a silent ModuleNotFoundError when an end user runs the CLI.
 """
 
+import importlib
+
 import pytest
 
 # ===== AUTO-GENERATED: cross-package imports =====
@@ -21,6 +23,21 @@ CROSS_PACKAGE_IMPORTS: list[str] = [
 
 
 @pytest.mark.parametrize("module_name", CROSS_PACKAGE_IMPORTS)
-def test_cross_package_import(module_name):
-    """Importing scitex-logging's declared cross-package dependency must succeed."""
-    pytest.importorskip(module_name)
+def test_cross_package_import_resolves_module_name(module_name):
+    """Importing a declared cross-package dependency yields a module object."""
+    # Arrange
+    name = module_name
+    # Act
+    module = pytest.importorskip(name)
+    # Assert
+    assert module is not None
+
+
+def test_cross_package_imports_list_is_iterable_sequence():
+    """The CROSS_PACKAGE_IMPORTS constant is a list (the gate has a schema)."""
+    # Arrange
+    declared = CROSS_PACKAGE_IMPORTS
+    # Act
+    is_list = isinstance(declared, list)
+    # Assert
+    assert is_list is True

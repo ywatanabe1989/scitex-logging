@@ -5,7 +5,6 @@ import logging
 import os
 import tempfile
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
@@ -16,97 +15,114 @@ class TestSetLevel:
     def setup_method(self):
         """Reset logging state before each test."""
         import scitex_logging._config as config_module
-        from scitex_logging._config import _GLOBAL_LEVEL
 
         config_module._GLOBAL_LEVEL = None
 
-    def test_set_level_with_string_debug(self):
-        """Test setting level with 'debug' string."""
+    @pytest.mark.parametrize(
+        "level_name,expected",
+        [
+            ("debug", logging.DEBUG),
+            ("info", logging.INFO),
+            ("warning", logging.WARNING),
+            ("error", logging.ERROR),
+            ("critical", logging.CRITICAL),
+        ],
+    )
+    def test_set_level_with_lowercase_string_name_persists(self, level_name, expected):
+        """`set_level('debug')` etc. persist the matching numeric level."""
+        # Arrange
         from scitex_logging._config import get_level, set_level
 
-        set_level("debug")
-        assert get_level() == logging.DEBUG
+        # Act
+        set_level(level_name)
+        result = get_level()
+        # Assert
+        assert result == expected
 
-    def test_set_level_with_string_info(self):
-        """Test setting level with 'info' string."""
+    def test_set_level_with_integer_value_persists(self):
+        """`set_level(logging.WARNING)` persists the integer WARNING level."""
+        # Arrange
         from scitex_logging._config import get_level, set_level
 
-        set_level("info")
-        assert get_level() == logging.INFO
-
-    def test_set_level_with_string_warning(self):
-        """Test setting level with 'warning' string."""
-        from scitex_logging._config import get_level, set_level
-
-        set_level("warning")
-        assert get_level() == logging.WARNING
-
-    def test_set_level_with_string_error(self):
-        """Test setting level with 'error' string."""
-        from scitex_logging._config import get_level, set_level
-
-        set_level("error")
-        assert get_level() == logging.ERROR
-
-    def test_set_level_with_string_critical(self):
-        """Test setting level with 'critical' string."""
-        from scitex_logging._config import get_level, set_level
-
-        set_level("critical")
-        assert get_level() == logging.CRITICAL
-
-    def test_set_level_with_integer(self):
-        """Test setting level with integer constant."""
-        from scitex_logging._config import get_level, set_level
-
+        # Act
         set_level(logging.WARNING)
-        assert get_level() == logging.WARNING
+        result = get_level()
+        # Assert
+        assert result == logging.WARNING
 
-    def test_set_level_case_insensitive(self):
-        """Test that level string is case insensitive."""
+    def test_set_level_uppercase_string_is_case_insensitive(self):
+        """`set_level('DEBUG')` resolves to logging.DEBUG (case-insensitive)."""
+        # Arrange
         from scitex_logging._config import get_level, set_level
 
+        # Act
         set_level("DEBUG")
-        assert get_level() == logging.DEBUG
+        result = get_level()
+        # Assert
+        assert result == logging.DEBUG
 
+    def test_set_level_title_case_string_is_case_insensitive(self):
+        """`set_level('Info')` resolves to logging.INFO (case-insensitive)."""
+        # Arrange
+        from scitex_logging._config import get_level, set_level
+
+        # Act
         set_level("Info")
-        assert get_level() == logging.INFO
+        result = get_level()
+        # Assert
+        assert result == logging.INFO
 
-    def test_set_level_with_custom_success(self):
-        """Test setting level with 'success' custom level."""
+    def test_set_level_with_string_success_maps_to_success_constant(self):
+        """`set_level('success')` resolves to the SUCCESS custom level."""
+        # Arrange
         from scitex_logging._config import get_level, set_level
         from scitex_logging._levels import SUCCESS
 
+        # Act
         set_level("success")
-        assert get_level() == SUCCESS
+        result = get_level()
+        # Assert
+        assert result == SUCCESS
 
-    def test_set_level_with_custom_fail(self):
-        """Test setting level with 'fail' custom level."""
+    def test_set_level_with_string_fail_maps_to_fail_constant(self):
+        """`set_level('fail')` resolves to the FAIL custom level."""
+        # Arrange
         from scitex_logging._config import get_level, set_level
         from scitex_logging._levels import FAIL
 
+        # Act
         set_level("fail")
-        assert get_level() == FAIL
+        result = get_level()
+        # Assert
+        assert result == FAIL
 
 
 class TestGetLevel:
     """Test get_level function."""
 
-    def test_get_level_returns_global_level_when_set(self):
-        """Test get_level returns the globally set level."""
+    def test_get_level_returns_globally_set_level(self):
+        """`get_level()` returns the value most recently set via set_level."""
+        # Arrange
         from scitex_logging._config import get_level, set_level
 
         set_level(logging.ERROR)
-        assert get_level() == logging.ERROR
+        # Act
+        result = get_level()
+        # Assert
+        assert result == logging.ERROR
 
-    def test_get_level_returns_root_logger_level_when_global_not_set(self):
-        """Test get_level returns root logger level when global not set."""
+    def test_get_level_falls_back_to_root_logger_when_unset(self):
+        """`get_level()` falls back to the root logger level when unset."""
+        # Arrange
         import scitex_logging._config as config_module
         from scitex_logging._config import get_level
 
         config_module._GLOBAL_LEVEL = None
-        root_level = logging.getLogger().level
-        assert get_level() == root_level
+        expected = logging.getLogger().level
+        # Act
+        result = get_level()
+        # Assert
+        assert result == expected
 
 
 class TestFileLogging:
@@ -118,34 +134,49 @@ class TestFileLogging:
 
         config_module._FILE_LOGGING_ENABLED = True
 
-    def test_file_logging_enabled_by_default(self):
-        """Test that file logging is enabled by default."""
+    def test_file_logging_is_enabled_by_default(self):
+        """`is_file_logging_enabled()` is True after module import."""
+        # Arrange
         from scitex_logging._config import is_file_logging_enabled
 
-        assert is_file_logging_enabled() is True
+        # Act
+        result = is_file_logging_enabled()
+        # Assert
+        assert result is True
 
-    def test_enable_file_logging_true(self):
-        """Test enabling file logging."""
+    def test_enable_file_logging_true_makes_state_true(self):
+        """`enable_file_logging(True)` flips state to True."""
+        # Arrange
         from scitex_logging._config import enable_file_logging, is_file_logging_enabled
 
+        # Act
         enable_file_logging(True)
-        assert is_file_logging_enabled() is True
+        result = is_file_logging_enabled()
+        # Assert
+        assert result is True
 
-    def test_enable_file_logging_false(self):
-        """Test disabling file logging."""
+    def test_enable_file_logging_false_makes_state_false(self):
+        """`enable_file_logging(False)` flips state to False."""
+        # Arrange
+        from scitex_logging._config import enable_file_logging, is_file_logging_enabled
+
+        # Act
+        enable_file_logging(False)
+        result = is_file_logging_enabled()
+        # Assert
+        assert result is False
+
+    def test_enable_file_logging_toggle_off_then_on_returns_true(self):
+        """Toggling `enable_file_logging(False)` then `(True)` ends at True."""
+        # Arrange
         from scitex_logging._config import enable_file_logging, is_file_logging_enabled
 
         enable_file_logging(False)
-        assert is_file_logging_enabled() is False
-
-    def test_enable_file_logging_toggle(self):
-        """Test toggling file logging on and off."""
-        from scitex_logging._config import enable_file_logging, is_file_logging_enabled
-
-        enable_file_logging(False)
-        assert is_file_logging_enabled() is False
+        # Act
         enable_file_logging(True)
-        assert is_file_logging_enabled() is True
+        result = is_file_logging_enabled()
+        # Assert
+        assert result is True
 
 
 class TestConfigure:
@@ -153,69 +184,90 @@ class TestConfigure:
 
     def setup_method(self):
         """Reset logging state before each test."""
-        # Clear existing handlers
         root = logging.getLogger()
         for handler in root.handlers[:]:
             root.removeHandler(handler)
 
     def teardown_method(self):
         """Clean up after tests."""
-        # Restore default state
         root = logging.getLogger()
         for handler in root.handlers[:]:
             root.removeHandler(handler)
 
-    def test_configure_with_console_only(self):
-        """Test configure with only console output."""
+    def test_configure_with_console_only_installs_one_handler(self):
+        """`configure(enable_console=True, enable_file=False)` installs 1 handler."""
+        # Arrange
         from scitex_logging._config import configure
 
         configure(
             level="info", enable_console=True, enable_file=False, capture_prints=False
         )
+        # Act
+        handler_count = len(logging.getLogger().handlers)
+        # Assert
+        assert handler_count == 1
 
-        root = logging.getLogger()
-        assert len(root.handlers) == 1
-        assert isinstance(root.handlers[0], logging.StreamHandler)
+    def test_configure_with_console_only_installs_stream_handler(self):
+        """`configure(enable_console=True, enable_file=False)` installs a StreamHandler."""
+        # Arrange
+        from scitex_logging._config import configure
 
-    def test_configure_sets_level(self):
-        """Test that configure sets the log level."""
+        configure(
+            level="info", enable_console=True, enable_file=False, capture_prints=False
+        )
+        # Act
+        installed = logging.getLogger().handlers[0]
+        # Assert
+        assert isinstance(installed, logging.StreamHandler)
+
+    def test_configure_with_warning_level_persists_warning(self):
+        """`configure(level='warning')` persists logging.WARNING globally."""
+        # Arrange
         from scitex_logging._config import configure, get_level
 
+        # Act
         configure(
             level="warning",
             enable_console=True,
             enable_file=False,
             capture_prints=False,
         )
-        assert get_level() == logging.WARNING
+        result = get_level()
+        # Assert
+        assert result == logging.WARNING
 
-    def test_configure_with_string_level(self):
-        """Test configure with string level argument."""
+    def test_configure_with_debug_string_level_persists_debug(self):
+        """`configure(level='debug')` persists logging.DEBUG globally."""
+        # Arrange
         from scitex_logging._config import configure, get_level
 
+        # Act
         configure(
             level="debug", enable_console=True, enable_file=False, capture_prints=False
         )
-        assert get_level() == logging.DEBUG
+        result = get_level()
+        # Assert
+        assert result == logging.DEBUG
 
-    def test_configure_clears_existing_handlers(self):
-        """Test that configure clears existing handlers before adding new ones."""
+    def test_configure_clears_existing_root_handlers_before_install(self):
+        """`configure()` clears pre-existing root handlers before adding new ones."""
+        # Arrange
         from scitex_logging._config import configure
 
-        # Add some handlers first
         root = logging.getLogger()
         root.addHandler(logging.StreamHandler())
         root.addHandler(logging.StreamHandler())
-        assert len(root.handlers) >= 2
-
-        # Configure should clear them
+        # Act
         configure(
             level="info", enable_console=True, enable_file=False, capture_prints=False
         )
-        assert len(root.handlers) == 1
+        handler_count = len(root.handlers)
+        # Assert
+        assert handler_count == 1
 
-    def test_configure_with_file_logging(self):
-        """Test configure with file logging enabled."""
+    def test_configure_with_file_logging_installs_two_handlers(self):
+        """`configure(enable_file=True, enable_console=True)` installs 2 handlers."""
+        # Arrange
         from scitex_logging._config import configure
 
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -227,36 +279,56 @@ class TestConfigure:
                 enable_console=True,
                 capture_prints=False,
             )
+            # Act
+            handler_count = len(logging.getLogger().handlers)
+        # Assert
+        assert handler_count == 2  # Console + File
 
-            root = logging.getLogger()
-            assert len(root.handlers) == 2  # Console + File
-
-    def test_configure_no_handlers_when_both_disabled(self):
-        """Test configure with both console and file disabled."""
+    def test_configure_with_both_disabled_installs_zero_handlers(self):
+        """`configure(enable_console=False, enable_file=False)` installs 0 handlers."""
+        # Arrange
         from scitex_logging._config import configure
 
+        # Act
         configure(
             level="info", enable_console=False, enable_file=False, capture_prints=False
         )
-
-        root = logging.getLogger()
-        assert len(root.handlers) == 0
+        handler_count = len(logging.getLogger().handlers)
+        # Assert
+        assert handler_count == 0
 
 
 class TestGetLogPath:
     """Test get_log_path function."""
 
-    def test_get_log_path_returns_none_when_no_file_handler(self):
-        """Test get_log_path returns None when no file handler exists."""
+    def setup_method(self):
+        """Reset logging state before each test."""
+        root = logging.getLogger()
+        for handler in root.handlers[:]:
+            root.removeHandler(handler)
+
+    def teardown_method(self):
+        """Clean up after tests."""
+        root = logging.getLogger()
+        for handler in root.handlers[:]:
+            root.removeHandler(handler)
+
+    def test_get_log_path_returns_none_when_no_file_handler_installed(self):
+        """`get_log_path()` is None when only console handlers exist."""
+        # Arrange
         from scitex_logging._config import configure, get_log_path
 
         configure(
             level="info", enable_console=True, enable_file=False, capture_prints=False
         )
-        assert get_log_path() is None
+        # Act
+        result = get_log_path()
+        # Assert
+        assert result is None
 
-    def test_get_log_path_returns_path_when_file_handler_exists(self):
-        """Test get_log_path returns the log file path when file handler exists."""
+    def test_get_log_path_returns_not_none_when_file_handler_installed(self):
+        """`get_log_path()` is not None when a file handler is installed."""
+        # Arrange
         from scitex_logging._config import configure, get_log_path
 
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -268,10 +340,29 @@ class TestGetLogPath:
                 enable_console=False,
                 capture_prints=False,
             )
-
+            # Act
             result = get_log_path()
-            assert result is not None
-            assert log_file in result
+        # Assert
+        assert result is not None
+
+    def test_get_log_path_returns_configured_file_path_substring(self):
+        """`get_log_path()` returns a string containing the configured path."""
+        # Arrange
+        from scitex_logging._config import configure, get_log_path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_file = os.path.join(tmpdir, "test.log")
+            configure(
+                level="info",
+                log_file=log_file,
+                enable_file=True,
+                enable_console=False,
+                capture_prints=False,
+            )
+            # Act
+            result = get_log_path()
+        # Assert
+        assert log_file in result
 
 
 if __name__ == "__main__":
@@ -284,168 +375,7 @@ if __name__ == "__main__":
 # --------------------------------------------------------------------------------
 # Start of Source Code from: /home/ywatanabe/proj/scitex-code/src/scitex/logging/_config.py
 # --------------------------------------------------------------------------------
-# #!/usr/bin/env python3
-# # -*- coding: utf-8 -*-
-# # Timestamp: "2025-08-21 21:41:37 (ywatanabe)"
-# # File: /home/ywatanabe/proj/scitex_repo/src/scitex/log/_config.py
-# # ----------------------------------------
-# from __future__ import annotations
-# import os
-#
-# __FILE__ = __file__
-# __DIR__ = os.path.dirname(__FILE__)
-# # ----------------------------------------
-#
-# """Configuration and setup for SciTeX logging."""
-#
-# import logging
-# from typing import Optional, Union
-#
-# from ._handlers import create_console_handler, create_file_handler, get_default_log_path
-# from ._levels import CRITICAL, DEBUG, ERROR, FAIL, INFO, SUCCESS, WARNING
-# from ._logger import setup_logger_class
-#
-# # Global level variable
-# _GLOBAL_LEVEL = None
-# _FILE_LOGGING_ENABLED = True  # Enable file logging by default
-#
-#
-# def set_level(level: Union[str, int]):
-#     """Set global log level for all SciTeX loggers."""
-#     global _GLOBAL_LEVEL
-#
-#     level_map = {
-#         "debug": DEBUG,
-#         "info": INFO,
-#         "warning": WARNING,
-#         "error": ERROR,
-#         "critical": CRITICAL,
-#         "success": SUCCESS,
-#         "fail": FAIL,
-#     }
-#
-#     if isinstance(level, str):
-#         level = level_map.get(level.lower(), level)
-#
-#     _GLOBAL_LEVEL = level
-#     logging.getLogger().setLevel(level)
-#
-#     # Update all existing handlers
-#     for handler in logging.getLogger().handlers:
-#         handler.setLevel(level)
-#
-#
-# def get_level():
-#     """Get current global log level."""
-#     return _GLOBAL_LEVEL or logging.getLogger().level
-#
-#
-# def enable_file_logging(enabled: bool = True):
-#     """Enable or disable file logging globally."""
-#     global _FILE_LOGGING_ENABLED
-#     _FILE_LOGGING_ENABLED = enabled
-#
-#
-# def is_file_logging_enabled():
-#     """Check if file logging is enabled."""
-#     return _FILE_LOGGING_ENABLED
-#
-#
-# def configure(
-#     level: Union[str, int] = "info",
-#     log_file: Optional[str] = None,
-#     enable_file: bool = True,
-#     enable_console: bool = True,
-#     capture_prints: bool = True,
-#     max_file_size: int = 10 * 1024 * 1024,
-#     backup_count: int = 5,
-# ):
-#     """Configure logging for SciTeX with both console and file output.
-#
-#     Args:
-#         level: Log level (string or logging constant)
-#         log_file: Path to log file (default: ~/.scitex/logs/scitex-YYYY-MM-DD.log)
-#         enable_file: Whether to enable file logging
-#         enable_console: Whether to enable console logging
-#         capture_prints: Whether to capture print() statements to logs
-#         max_file_size: Maximum size of log file before rotation (default: 10MB)
-#         backup_count: Number of backup files to keep (default: 5)
-#     """
-#     # Setup custom logger class
-#     setup_logger_class()
-#
-#     # Convert level if string
-#     level_map = {
-#         "debug": DEBUG,
-#         "info": INFO,
-#         "warning": WARNING,
-#         "error": ERROR,
-#         "critical": CRITICAL,
-#         "success": SUCCESS,
-#         "fail": FAIL,
-#     }
-#
-#     if isinstance(level, str):
-#         level = level_map.get(level.lower(), level)
-#
-#     # Set global level
-#     set_level(level)
-#
-#     # Clear any existing handlers
-#     root_logger = logging.getLogger()
-#     for handler in root_logger.handlers[:]:
-#         root_logger.removeHandler(handler)
-#
-#     handlers = []
-#
-#     # Add console handler if enabled
-#     if enable_console:
-#         console_handler = create_console_handler(level)
-#         handlers.append(console_handler)
-#
-#     # Add file handler if enabled
-#     if enable_file and is_file_logging_enabled():
-#         if log_file is None:
-#             log_file = get_default_log_path()
-#
-#         file_handler = create_file_handler(
-#             log_file, level, max_bytes=max_file_size, backup_count=backup_count
-#         )
-#         handlers.append(file_handler)
-#
-#     # Configure basic logging with our handlers
-#     logging.basicConfig(
-#         level=level,
-#         handlers=handlers,
-#         force=True,  # Force reconfiguration
-#     )
-#
-#     # Enable print capture if requested
-#     if capture_prints:
-#         from ._print_capture import enable_print_capture
-#
-#         enable_print_capture()
-#
-#
-# def get_log_path():
-#     """Get the current log file path."""
-#     for handler in logging.getLogger().handlers:
-#         if hasattr(handler, "baseFilename"):
-#             return handler.baseFilename
-#     return None
-#
-#
-# __all__ = [
-#     "set_level",
-#     "get_level",
-#     "enable_file_logging",
-#     "is_file_logging_enabled",
-#     "configure",
-#     "get_log_path",
-# ]
-#
-# # EOF
-
+# (source code preserved separately — see git history)
 # --------------------------------------------------------------------------------
 # End of Source Code from: /home/ywatanabe/proj/scitex-code/src/scitex/logging/_config.py
 # --------------------------------------------------------------------------------
