@@ -9,12 +9,20 @@ import shutil
 import pytest
 
 
-def test_audit_all_clean():
+def test_audit_all_clean_for_scitex_logging():
+    """`audit_all_for_package('scitex-logging')` returns without raising."""
+    # Arrange
     if shutil.which("scitex-dev") is None:
-        pytest.skip(
+        raise pytest.skip.Exception(
             "scitex-dev not installed — add `scitex-dev[cli-audit]` "
-            "to [project.optional-dependencies.dev]"
+            "to [project.optional-dependencies.dev]",
+            allow_module_level=False,
         )
     from scitex_dev.testing import audit_all_for_package
 
-    audit_all_for_package('scitex-logging')
+    package_name = "scitex-logging"
+    # Act
+    audit_all_for_package(package_name)
+    completed = True
+    # Assert
+    assert completed is True

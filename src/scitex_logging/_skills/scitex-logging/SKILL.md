@@ -16,8 +16,6 @@ interfaces:
 
 # scitex-logging
 
-> **Interfaces:** Python ⭐⭐⭐ (primary) · CLI — · MCP — · Skills ⭐⭐ · Hook — · HTTP —
-
 Auto-configured drop-in extension of `logging`:
 
 ## Installation & import (two equivalent paths)

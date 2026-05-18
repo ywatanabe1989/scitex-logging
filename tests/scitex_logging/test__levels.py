@@ -12,45 +12,176 @@ from scitex_logging._levels import CRITICAL, DEBUG, ERROR, FAIL, INFO, SUCCESS, 
 class TestLogLevels:
     """Test custom log level definitions."""
 
-    def test_success_level_value(self):
-        """Test SUCCESS level has correct value."""
-        assert SUCCESS == 31
-        assert SUCCESS > logging.WARNING
-        assert SUCCESS < logging.ERROR
+    def test_success_level_value_equals_31(self):
+        """SUCCESS log-level integer is 31."""
+        # Arrange
+        expected = 31
+        # Act
+        actual = SUCCESS
+        # Assert
+        assert actual == expected
 
-    def test_fail_level_value(self):
-        """Test FAIL level has correct value."""
-        assert FAIL == 35
-        assert FAIL > logging.WARNING
-        assert FAIL < logging.ERROR
+    def test_success_level_value_above_warning(self):
+        """SUCCESS log-level integer is strictly greater than logging.WARNING."""
+        # Arrange
+        boundary = logging.WARNING
+        # Act
+        observed = SUCCESS
+        # Assert
+        assert observed > boundary
 
-    def test_success_level_name(self):
-        """Test SUCCESS level has correct name."""
-        assert logging.getLevelName(SUCCESS) == "SUCC"
+    def test_success_level_value_below_error(self):
+        """SUCCESS log-level integer is strictly less than logging.ERROR."""
+        # Arrange
+        boundary = logging.ERROR
+        # Act
+        observed = SUCCESS
+        # Assert
+        assert observed < boundary
 
-    def test_fail_level_name(self):
-        """Test FAIL level has correct name."""
-        assert logging.getLevelName(FAIL) == "FAIL"
+    def test_fail_level_value_equals_35(self):
+        """FAIL log-level integer is 35."""
+        # Arrange
+        expected = 35
+        # Act
+        actual = FAIL
+        # Assert
+        assert actual == expected
 
-    def test_standard_level_names(self):
-        """Test standard levels have 4-character names."""
-        assert logging.getLevelName(DEBUG) == "DEBU"
-        assert logging.getLevelName(INFO) == "INFO"
-        assert logging.getLevelName(WARNING) == "WARN"
-        assert logging.getLevelName(ERROR) == "ERRO"
-        assert logging.getLevelName(CRITICAL) == "CRIT"
+    def test_fail_level_value_above_warning(self):
+        """FAIL log-level integer is strictly greater than logging.WARNING."""
+        # Arrange
+        boundary = logging.WARNING
+        # Act
+        observed = FAIL
+        # Assert
+        assert observed > boundary
 
-    def test_standard_level_values(self):
-        """Test standard levels maintain correct values."""
-        assert DEBUG == logging.DEBUG
-        assert INFO == logging.INFO
-        assert WARNING == logging.WARNING
-        assert ERROR == logging.ERROR
-        assert CRITICAL == logging.CRITICAL
+    def test_fail_level_value_below_error(self):
+        """FAIL log-level integer is strictly less than logging.ERROR."""
+        # Arrange
+        boundary = logging.ERROR
+        # Act
+        observed = FAIL
+        # Assert
+        assert observed < boundary
 
-    def test_level_ordering(self):
-        """Test all levels are properly ordered."""
-        assert DEBUG < INFO < WARNING < SUCCESS < FAIL < ERROR < CRITICAL
+    def test_success_level_name_is_succ(self):
+        """SUCCESS level reports its level-name as `SUCC`."""
+        # Arrange
+        level_int = SUCCESS
+        # Act
+        name = logging.getLevelName(level_int)
+        # Assert
+        assert name == "SUCC"
+
+    def test_fail_level_name_is_fail(self):
+        """FAIL level reports its level-name as `FAIL`."""
+        # Arrange
+        level_int = FAIL
+        # Act
+        name = logging.getLevelName(level_int)
+        # Assert
+        assert name == "FAIL"
+
+    def test_debug_level_name_is_debu(self):
+        """DEBUG level reports its level-name as `DEBU`."""
+        # Arrange
+        level_int = DEBUG
+        # Act
+        name = logging.getLevelName(level_int)
+        # Assert
+        assert name == "DEBU"
+
+    def test_info_level_name_is_info(self):
+        """INFO level reports its level-name as `INFO`."""
+        # Arrange
+        level_int = INFO
+        # Act
+        name = logging.getLevelName(level_int)
+        # Assert
+        assert name == "INFO"
+
+    def test_warning_level_name_is_warn(self):
+        """WARNING level reports its level-name as `WARN`."""
+        # Arrange
+        level_int = WARNING
+        # Act
+        name = logging.getLevelName(level_int)
+        # Assert
+        assert name == "WARN"
+
+    def test_error_level_name_is_erro(self):
+        """ERROR level reports its level-name as `ERRO`."""
+        # Arrange
+        level_int = ERROR
+        # Act
+        name = logging.getLevelName(level_int)
+        # Assert
+        assert name == "ERRO"
+
+    def test_critical_level_name_is_crit(self):
+        """CRITICAL level reports its level-name as `CRIT`."""
+        # Arrange
+        level_int = CRITICAL
+        # Act
+        name = logging.getLevelName(level_int)
+        # Assert
+        assert name == "CRIT"
+
+    def test_debug_level_value_matches_stdlib(self):
+        """DEBUG re-export equals logging.DEBUG."""
+        # Arrange
+        expected = logging.DEBUG
+        # Act
+        actual = DEBUG
+        # Assert
+        assert actual == expected
+
+    def test_info_level_value_matches_stdlib(self):
+        """INFO re-export equals logging.INFO."""
+        # Arrange
+        expected = logging.INFO
+        # Act
+        actual = INFO
+        # Assert
+        assert actual == expected
+
+    def test_warning_level_value_matches_stdlib(self):
+        """WARNING re-export equals logging.WARNING."""
+        # Arrange
+        expected = logging.WARNING
+        # Act
+        actual = WARNING
+        # Assert
+        assert actual == expected
+
+    def test_error_level_value_matches_stdlib(self):
+        """ERROR re-export equals logging.ERROR."""
+        # Arrange
+        expected = logging.ERROR
+        # Act
+        actual = ERROR
+        # Assert
+        assert actual == expected
+
+    def test_critical_level_value_matches_stdlib(self):
+        """CRITICAL re-export equals logging.CRITICAL."""
+        # Arrange
+        expected = logging.CRITICAL
+        # Act
+        actual = CRITICAL
+        # Assert
+        assert actual == expected
+
+    def test_level_ordering_chain_is_monotonic(self):
+        """All log-levels are monotonically increasing in priority."""
+        # Arrange
+        chain = [DEBUG, INFO, WARNING, SUCCESS, FAIL, ERROR, CRITICAL]
+        # Act
+        is_monotonic = all(chain[i] < chain[i + 1] for i in range(len(chain) - 1))
+        # Assert
+        assert is_monotonic is True
 
 
 if __name__ == "__main__":

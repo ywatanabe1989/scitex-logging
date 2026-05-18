@@ -2,49 +2,88 @@
 """Tests for scitex.logging._warnings module."""
 
 import logging
+import logging.handlers
 import os
 
 import pytest
 
 
+def _capture_raise(func, *args, **kwargs):
+    """Invoke ``func`` and return the raised exception (or ``None``).
+
+    This helper lets tests assert on the raised exception's *message*
+    without combining ``with pytest.raises(...)`` and a follow-up
+    ``assert`` in the same test body (STX-TQ007).
+    """
+    try:
+        func(*args, **kwargs)
+    except BaseException as captured:
+        return captured
+    return None
+
+
 class TestWarningCategories:
     """Test warning category classes."""
 
-    def test_scitex_warning_is_user_warning(self):
-        """Test that SciTeXWarning is a subclass of UserWarning."""
+    def test_scitex_warning_subclasses_user_warning(self):
+        """SciTeXWarning is a subclass of the stdlib UserWarning."""
+        # Arrange
         from scitex_logging._warnings import SciTeXWarning
 
-        assert issubclass(SciTeXWarning, UserWarning)
+        # Act
+        is_subclass = issubclass(SciTeXWarning, UserWarning)
+        # Assert
+        assert is_subclass is True
 
-    def test_unit_warning_is_scitex_warning(self):
-        """Test that UnitWarning is a subclass of SciTeXWarning."""
+    def test_unit_warning_subclasses_scitex_warning(self):
+        """UnitWarning is a subclass of SciTeXWarning."""
+        # Arrange
         from scitex_logging._warnings import SciTeXWarning, UnitWarning
 
-        assert issubclass(UnitWarning, SciTeXWarning)
+        # Act
+        is_subclass = issubclass(UnitWarning, SciTeXWarning)
+        # Assert
+        assert is_subclass is True
 
-    def test_style_warning_is_scitex_warning(self):
-        """Test that StyleWarning is a subclass of SciTeXWarning."""
+    def test_style_warning_subclasses_scitex_warning(self):
+        """StyleWarning is a subclass of SciTeXWarning."""
+        # Arrange
         from scitex_logging._warnings import SciTeXWarning, StyleWarning
 
-        assert issubclass(StyleWarning, SciTeXWarning)
+        # Act
+        is_subclass = issubclass(StyleWarning, SciTeXWarning)
+        # Assert
+        assert is_subclass is True
 
-    def test_deprecation_warning_is_scitex_warning(self):
-        """Test that SciTeXDeprecationWarning is a subclass of SciTeXWarning."""
+    def test_deprecation_warning_subclasses_scitex_warning(self):
+        """SciTeXDeprecationWarning is a subclass of SciTeXWarning."""
+        # Arrange
         from scitex_logging._warnings import SciTeXDeprecationWarning, SciTeXWarning
 
-        assert issubclass(SciTeXDeprecationWarning, SciTeXWarning)
+        # Act
+        is_subclass = issubclass(SciTeXDeprecationWarning, SciTeXWarning)
+        # Assert
+        assert is_subclass is True
 
-    def test_performance_warning_is_scitex_warning(self):
-        """Test that PerformanceWarning is a subclass of SciTeXWarning."""
+    def test_performance_warning_subclasses_scitex_warning(self):
+        """PerformanceWarning is a subclass of SciTeXWarning."""
+        # Arrange
         from scitex_logging._warnings import PerformanceWarning, SciTeXWarning
 
-        assert issubclass(PerformanceWarning, SciTeXWarning)
+        # Act
+        is_subclass = issubclass(PerformanceWarning, SciTeXWarning)
+        # Assert
+        assert is_subclass is True
 
-    def test_data_loss_warning_is_scitex_warning(self):
-        """Test that DataLossWarning is a subclass of SciTeXWarning."""
+    def test_data_loss_warning_subclasses_scitex_warning(self):
+        """DataLossWarning is a subclass of SciTeXWarning."""
+        # Arrange
         from scitex_logging._warnings import DataLossWarning, SciTeXWarning
 
-        assert issubclass(DataLossWarning, SciTeXWarning)
+        # Act
+        is_subclass = issubclass(DataLossWarning, SciTeXWarning)
+        # Assert
+        assert is_subclass is True
 
 
 class TestFilterWarnings:
@@ -62,50 +101,68 @@ class TestFilterWarnings:
 
         resetwarnings()
 
-    def test_filterwarnings_ignore(self):
-        """Test filterwarnings with 'ignore' action."""
-        from scitex_logging._warnings import UnitWarning, filterwarnings
+    def test_filterwarnings_ignore_does_not_raise_or_log(self):
+        """`filterwarnings('ignore', ...)` registers without raising."""
+        # Arrange
+        from scitex_logging._warnings import UnitWarning, filterwarnings, warn
 
         filterwarnings("ignore", category=UnitWarning)
-        # Should not raise or log
+        # Act
+        result = warn("Test", UnitWarning)
+        # Assert
+        assert result is None
 
-    def test_filterwarnings_error(self):
-        """Test filterwarnings with 'error' action."""
+    def test_filterwarnings_error_action_promotes_warn_to_exception(self):
+        """`filterwarnings('error', ...)` makes `warn(...)` raise the category."""
+        # Arrange
         from scitex_logging._warnings import UnitWarning, filterwarnings, warn
 
         filterwarnings("error", category=UnitWarning)
-
+        # Act
+        # Assert
         with pytest.raises(UnitWarning):
             warn("Test warning", UnitWarning)
 
-    def test_filterwarnings_always(self):
-        """Test filterwarnings with 'always' action."""
+    def test_filterwarnings_always_action_registers_without_error(self):
+        """`filterwarnings('always', ...)` registers without raising."""
+        # Arrange
         from scitex_logging._warnings import UnitWarning, filterwarnings
 
-        filterwarnings("always", category=UnitWarning)
-        # Should not raise
+        # Act
+        returned = filterwarnings("always", category=UnitWarning)
+        # Assert
+        assert returned is None
 
-    def test_filterwarnings_invalid_action(self):
-        """Test filterwarnings with invalid action raises ValueError."""
+    def test_filterwarnings_invalid_action_raises_value_error(self):
+        """Unknown action strings cause `filterwarnings` to raise ValueError."""
+        # Arrange
         from scitex_logging._warnings import filterwarnings
 
+        # Act
+        # Assert
         with pytest.raises(ValueError):
             filterwarnings("invalid_action")
 
-    def test_filterwarnings_valid_actions(self):
-        """Test all valid actions are accepted."""
+    @pytest.mark.parametrize(
+        "action", ["ignore", "error", "always", "default", "once", "module"]
+    )
+    def test_filterwarnings_accepts_valid_action_string(self, action):
+        """Each documented action string is accepted by `filterwarnings`."""
+        # Arrange
         from scitex_logging._warnings import filterwarnings
 
-        valid_actions = ["ignore", "error", "always", "default", "once", "module"]
-        for action in valid_actions:
-            filterwarnings(action)  # Should not raise
+        # Act
+        returned = filterwarnings(action)
+        # Assert
+        assert returned is None
 
 
 class TestResetWarnings:
     """Test resetwarnings function."""
 
-    def test_resetwarnings_clears_filters(self):
-        """Test that resetwarnings clears all filters."""
+    def test_resetwarnings_clears_registered_error_filter(self):
+        """`resetwarnings()` removes a previously installed `error` filter."""
+        # Arrange
         from scitex_logging._warnings import (
             UnitWarning,
             filterwarnings,
@@ -114,15 +171,13 @@ class TestResetWarnings:
         )
 
         filterwarnings("error", category=UnitWarning)
-
-        # Should raise before reset
-        with pytest.raises(UnitWarning):
-            warn("Test", UnitWarning)
-
+        # Act
         resetwarnings()
-
-        # Should not raise after reset (default behavior)
-        # Note: default behavior logs the warning, doesn't raise
+        # After reset, the default action is "default" (log only, no raise),
+        # so the same warn() call must NOT raise.
+        result = warn("Test", UnitWarning)
+        # Assert
+        assert result is None
 
 
 class TestWarn:
@@ -140,36 +195,53 @@ class TestWarn:
 
         resetwarnings()
 
-    def test_warn_with_ignore_action(self):
-        """Test warn with ignore action does not log."""
+    def test_warn_under_ignore_filter_returns_silently(self):
+        """`warn(...)` is a silent no-op when category is filtered to ignore."""
+        # Arrange
         from scitex_logging._warnings import UnitWarning, filterwarnings, warn
 
         filterwarnings("ignore", category=UnitWarning)
-        # Should not raise
-        warn("Ignored warning", UnitWarning)
+        # Act
+        result = warn("Ignored warning", UnitWarning)
+        # Assert
+        assert result is None
 
-    def test_warn_with_error_action_raises(self):
-        """Test warn with error action raises the warning."""
+    def test_warn_under_error_filter_raises_category(self):
+        """`warn(...)` raises the configured category as an exception."""
+        # Arrange
         from scitex_logging._warnings import UnitWarning, filterwarnings, warn
 
         filterwarnings("error", category=UnitWarning)
-
-        with pytest.raises(UnitWarning) as exc_info:
+        # Act
+        # Assert
+        with pytest.raises(UnitWarning):
             warn("Error warning", UnitWarning)
 
-        assert "Error warning" in str(exc_info.value)
+    def test_warn_error_filter_preserves_message_in_exception(self):
+        """The raised exception's `str` includes the original message."""
+        # Arrange
+        from scitex_logging._warnings import UnitWarning, filterwarnings, warn
 
-    def test_warn_default_category(self):
-        """Test warn uses SciTeXWarning as default category."""
+        filterwarnings("error", category=UnitWarning)
+        # Act
+        captured = _capture_raise(warn, "Error warning", UnitWarning)
+        # Assert
+        assert "Error warning" in str(captured)
+
+    def test_warn_default_category_is_scitex_warning(self):
+        """`warn(...)` without category uses SciTeXWarning."""
+        # Arrange
         from scitex_logging._warnings import SciTeXWarning, filterwarnings, warn
 
         filterwarnings("error", category=SciTeXWarning)
-
+        # Act
+        # Assert
         with pytest.raises(SciTeXWarning):
             warn("Default category warning")
 
-    def test_warn_inherits_parent_filter(self):
-        """Test warn respects filter on parent category."""
+    def test_warn_subclass_inherits_parent_filter(self):
+        """Setting `error` on parent raises for emitted subclass warnings."""
+        # Arrange
         from scitex_logging._warnings import (
             SciTeXWarning,
             UnitWarning,
@@ -177,10 +249,9 @@ class TestWarn:
             warn,
         )
 
-        # Set filter on parent class
         filterwarnings("error", category=SciTeXWarning)
-
-        # Child class should inherit the filter
+        # Act
+        # Assert
         with pytest.raises(UnitWarning):
             warn("Test", UnitWarning)
 
@@ -200,8 +271,9 @@ class TestConvenienceWarnings:
 
         resetwarnings()
 
-    def test_warn_deprecated_basic(self):
-        """Test warn_deprecated basic usage."""
+    def test_warn_deprecated_raises_under_error_filter(self):
+        """`warn_deprecated(...)` raises SciTeXDeprecationWarning under error."""
+        # Arrange
         from scitex_logging._warnings import (
             SciTeXDeprecationWarning,
             filterwarnings,
@@ -209,16 +281,14 @@ class TestConvenienceWarnings:
         )
 
         filterwarnings("error", category=SciTeXDeprecationWarning)
-
-        with pytest.raises(SciTeXDeprecationWarning) as exc_info:
+        # Act
+        # Assert
+        with pytest.raises(SciTeXDeprecationWarning):
             warn_deprecated("old_func", "new_func")
 
-        assert "old_func" in str(exc_info.value)
-        assert "new_func" in str(exc_info.value)
-        assert "deprecated" in str(exc_info.value)
-
-    def test_warn_deprecated_with_version(self):
-        """Test warn_deprecated with version."""
+    def test_warn_deprecated_message_names_old_symbol(self):
+        """`warn_deprecated(...)` mentions the deprecated old name."""
+        # Arrange
         from scitex_logging._warnings import (
             SciTeXDeprecationWarning,
             filterwarnings,
@@ -226,14 +296,61 @@ class TestConvenienceWarnings:
         )
 
         filterwarnings("error", category=SciTeXDeprecationWarning)
+        # Act
+        captured = _capture_raise(warn_deprecated, "old_func", "new_func")
+        # Assert
+        assert "old_func" in str(captured)
 
-        with pytest.raises(SciTeXDeprecationWarning) as exc_info:
-            warn_deprecated("old_func", "new_func", version="2.0")
+    def test_warn_deprecated_message_names_new_symbol(self):
+        """`warn_deprecated(...)` mentions the replacement new name."""
+        # Arrange
+        from scitex_logging._warnings import (
+            SciTeXDeprecationWarning,
+            filterwarnings,
+            warn_deprecated,
+        )
 
-        assert "2.0" in str(exc_info.value)
+        filterwarnings("error", category=SciTeXDeprecationWarning)
+        # Act
+        captured = _capture_raise(warn_deprecated, "old_func", "new_func")
+        # Assert
+        assert "new_func" in str(captured)
 
-    def test_warn_performance(self):
-        """Test warn_performance function."""
+    def test_warn_deprecated_message_contains_deprecated_keyword(self):
+        """`warn_deprecated(...)` emits the `deprecated` keyword in the message."""
+        # Arrange
+        from scitex_logging._warnings import (
+            SciTeXDeprecationWarning,
+            filterwarnings,
+            warn_deprecated,
+        )
+
+        filterwarnings("error", category=SciTeXDeprecationWarning)
+        # Act
+        captured = _capture_raise(warn_deprecated, "old_func", "new_func")
+        # Assert
+        assert "deprecated" in str(captured)
+
+    def test_warn_deprecated_with_version_includes_version_string(self):
+        """`warn_deprecated(..., version=...)` embeds the version in the message."""
+        # Arrange
+        from scitex_logging._warnings import (
+            SciTeXDeprecationWarning,
+            filterwarnings,
+            warn_deprecated,
+        )
+
+        filterwarnings("error", category=SciTeXDeprecationWarning)
+        # Act
+        captured = _capture_raise(
+            warn_deprecated, "old_func", "new_func", version="2.0"
+        )
+        # Assert
+        assert "2.0" in str(captured)
+
+    def test_warn_performance_raises_performance_warning(self):
+        """`warn_performance(...)` raises PerformanceWarning under error filter."""
+        # Arrange
         from scitex_logging._warnings import (
             PerformanceWarning,
             filterwarnings,
@@ -241,15 +358,48 @@ class TestConvenienceWarnings:
         )
 
         filterwarnings("error", category=PerformanceWarning)
-
-        with pytest.raises(PerformanceWarning) as exc_info:
+        # Act
+        # Assert
+        with pytest.raises(PerformanceWarning):
             warn_performance("matrix_multiply", "Use vectorized operations")
 
-        assert "matrix_multiply" in str(exc_info.value)
-        assert "vectorized" in str(exc_info.value)
+    def test_warn_performance_message_names_operation(self):
+        """`warn_performance(...)` mentions the operation name."""
+        # Arrange
+        from scitex_logging._warnings import (
+            PerformanceWarning,
+            filterwarnings,
+            warn_performance,
+        )
 
-    def test_warn_data_loss(self):
-        """Test warn_data_loss function."""
+        filterwarnings("error", category=PerformanceWarning)
+        # Act
+        captured = _capture_raise(
+            warn_performance, "matrix_multiply", "Use vectorized operations"
+        )
+        # Assert
+        assert "matrix_multiply" in str(captured)
+
+    def test_warn_performance_message_includes_suggestion(self):
+        """`warn_performance(...)` carries the supplied suggestion through."""
+        # Arrange
+        from scitex_logging._warnings import (
+            PerformanceWarning,
+            filterwarnings,
+            warn_performance,
+        )
+
+        filterwarnings("error", category=PerformanceWarning)
+        # Act
+        captured = _capture_raise(
+            warn_performance, "matrix_multiply", "Use vectorized operations"
+        )
+        # Assert
+        assert "vectorized" in str(captured)
+
+    def test_warn_data_loss_raises_data_loss_warning(self):
+        """`warn_data_loss(...)` raises DataLossWarning under error filter."""
+        # Arrange
         from scitex_logging._warnings import (
             DataLossWarning,
             filterwarnings,
@@ -257,12 +407,44 @@ class TestConvenienceWarnings:
         )
 
         filterwarnings("error", category=DataLossWarning)
-
-        with pytest.raises(DataLossWarning) as exc_info:
+        # Act
+        # Assert
+        with pytest.raises(DataLossWarning):
             warn_data_loss("truncation", "Values will be truncated")
 
-        assert "truncation" in str(exc_info.value)
-        assert "truncated" in str(exc_info.value)
+    def test_warn_data_loss_message_names_operation(self):
+        """`warn_data_loss(...)` mentions the operation name."""
+        # Arrange
+        from scitex_logging._warnings import (
+            DataLossWarning,
+            filterwarnings,
+            warn_data_loss,
+        )
+
+        filterwarnings("error", category=DataLossWarning)
+        # Act
+        captured = _capture_raise(
+            warn_data_loss, "truncation", "Values will be truncated"
+        )
+        # Assert
+        assert "truncation" in str(captured)
+
+    def test_warn_data_loss_message_includes_detail(self):
+        """`warn_data_loss(...)` carries the supplied detail through."""
+        # Arrange
+        from scitex_logging._warnings import (
+            DataLossWarning,
+            filterwarnings,
+            warn_data_loss,
+        )
+
+        filterwarnings("error", category=DataLossWarning)
+        # Act
+        captured = _capture_raise(
+            warn_data_loss, "truncation", "Values will be truncated"
+        )
+        # Assert
+        assert "truncated" in str(captured)
 
 
 class TestOnceAndDefaultActions:
@@ -280,27 +462,28 @@ class TestOnceAndDefaultActions:
 
         resetwarnings()
 
-    def test_once_action_shows_only_once(self):
-        """Test that 'once' action shows warning only once."""
+    def test_once_action_emits_warning_only_a_single_time(self):
+        """`filterwarnings('once', ...)` deduplicates repeated warn() calls."""
+        # Arrange
         from scitex_logging._warnings import UnitWarning, filterwarnings, warn
 
         filterwarnings("once", category=UnitWarning)
-
-        # Set up a handler to capture warnings
         logger = logging.getLogger("scitex.warnings")
-        handler = logging.handlers.MemoryHandler(capacity=100)
+        capacity = 100  # stx-allow: STX-NL001
+        handler = logging.handlers.MemoryHandler(capacity=capacity)
         handler.setLevel(logging.WARNING)
         logger.addHandler(handler)
         logger.setLevel(logging.WARNING)
-
-        # Emit same warning twice
-        warn("Same warning", UnitWarning)
-        warn("Same warning", UnitWarning)
-
-        # Flush handler to see records
-        handler.flush()
-
-        logger.removeHandler(handler)
+        try:
+            # Act
+            warn("Same warning", UnitWarning)
+            warn("Same warning", UnitWarning)
+            handler.flush()
+            captured_count = len(handler.buffer)
+        finally:
+            logger.removeHandler(handler)
+        # Assert
+        assert captured_count <= 1
 
 
 if __name__ == "__main__":
@@ -313,268 +496,7 @@ if __name__ == "__main__":
 # --------------------------------------------------------------------------------
 # Start of Source Code from: /home/ywatanabe/proj/scitex-code/src/scitex/logging/_warnings.py
 # --------------------------------------------------------------------------------
-# #!/usr/bin/env python3
-# # -*- coding: utf-8 -*-
-# # Timestamp: "2025-12-21"
-# # File: /home/ywatanabe/proj/scitex-code/src/scitex/logging/_warnings.py
-#
-# """Warning system for SciTeX, mimicking Python's warnings module.
-#
-# Usage:
-#     import scitex_logging as logging
-#     from scitex_logging import UnitWarning
-#
-#     # Emit a warning
-#     logging.warn("Missing units on axis label", UnitWarning)
-#
-#     # Filter warnings (like warnings.filterwarnings)
-#     logging.filterwarnings("ignore", category=UnitWarning)
-#     logging.filterwarnings("error", category=UnitWarning)  # Raise as exception
-#     logging.filterwarnings("always", category=UnitWarning)  # Always show
-# """
-#
-# import logging as _logging
-# from typing import Dict, Optional, Type, Set
-#
-# # =============================================================================
-# # Warning Categories (similar to Python's warning classes)
-# # =============================================================================
-#
-#
-# class SciTeXWarning(UserWarning):
-#     """Base warning class for all SciTeX warnings."""
-#
-#     pass
-#
-#
-# class UnitWarning(SciTeXWarning):
-#     """Warning for axis label unit issues (educational for SI conventions).
-#
-#     Raised when:
-#     - Axis labels are missing units
-#     - Units use parentheses instead of brackets (SI prefers [])
-#     - Units use division instead of negative exponents (m/s vs m·s⁻¹)
-#     """
-#
-#     pass
-#
-#
-# class StyleWarning(SciTeXWarning):
-#     """Warning for style/formatting issues."""
-#
-#     pass
-#
-#
-# class SciTeXDeprecationWarning(SciTeXWarning):
-#     """Warning for deprecated SciTeX features."""
-#
-#     pass
-#
-#
-# class PerformanceWarning(SciTeXWarning):
-#     """Warning for performance issues."""
-#
-#     pass
-#
-#
-# class DataLossWarning(SciTeXWarning):
-#     """Warning for potential data loss."""
-#
-#     pass
-#
-#
-# # =============================================================================
-# # Warning Filter Registry
-# # =============================================================================
-#
-# # Actions: "ignore", "error", "always", "default", "once", "module"
-# _filters: Dict[Type[SciTeXWarning], str] = {}
-# _seen_warnings: Set[str] = set()  # For "once" action
-#
-#
-# def filterwarnings(
-#     action: str,
-#     category: Type[SciTeXWarning] = SciTeXWarning,
-#     message: Optional[str] = None,
-# ) -> None:
-#     """Control warning behavior (like warnings.filterwarnings).
-#
-#     Parameters
-#     ----------
-#     action : str
-#         One of:
-#         - "ignore": Never show this warning
-#         - "error": Raise as exception
-#         - "always": Always show
-#         - "default": Show first occurrence per location
-#         - "once": Show only once total
-#         - "module": Show once per module
-#     category : type
-#         Warning category (default: SciTeXWarning = all)
-#     message : str, optional
-#         Regex pattern to match warning message (not implemented yet)
-#
-#     Examples
-#     --------
-#     >>> import scitex_logging as logging
-#     >>> from scitex_logging import UnitWarning
-#     >>> logging.filterwarnings("ignore", category=UnitWarning)
-#     """
-#     valid_actions = {"ignore", "error", "always", "default", "once", "module"}
-#     if action not in valid_actions:
-#         raise ValueError(f"Invalid action '{action}'. Must be one of: {valid_actions}")
-#
-#     _filters[category] = action
-#
-#
-# def resetwarnings() -> None:
-#     """Reset all warning filters to default behavior."""
-#     global _filters, _seen_warnings
-#     _filters = {}
-#     _seen_warnings = set()
-#
-#
-# def _get_action(category: Type[SciTeXWarning]) -> str:
-#     """Get the action for a warning category, checking inheritance."""
-#     # Check exact match first
-#     if category in _filters:
-#         return _filters[category]
-#
-#     # Check parent classes
-#     for filter_cat, action in _filters.items():
-#         if issubclass(category, filter_cat):
-#             return action
-#
-#     # Default action
-#     return "default"
-#
-#
-# # =============================================================================
-# # Warning Emission
-# # =============================================================================
-#
-#
-# def warn(
-#     message: str,
-#     category: Type[SciTeXWarning] = SciTeXWarning,
-#     stacklevel: int = 2,
-# ) -> None:
-#     """Emit a warning (like warnings.warn but integrated with scitex.logging).
-#
-#     Parameters
-#     ----------
-#     message : str
-#         Warning message
-#     category : type
-#         Warning category (default: SciTeXWarning)
-#     stacklevel : int
-#         Stack level for source location (default: 2 = caller)
-#
-#     Examples
-#     --------
-#     >>> import scitex_logging as logging
-#     >>> from scitex_logging import UnitWarning
-#     >>> logging.warn("X axis has no units", UnitWarning)
-#     """
-#     import inspect
-#
-#     action = _get_action(category)
-#
-#     # Handle action
-#     if action == "ignore":
-#         return
-#
-#     if action == "error":
-#         raise category(message)
-#
-#     # Get source location for "once", "module", "default" actions
-#     frame = inspect.currentframe()
-#     for _ in range(stacklevel):
-#         if frame is not None:
-#             frame = frame.f_back
-#
-#     location = ""
-#     if frame is not None:
-#         filename = frame.f_code.co_filename
-#         lineno = frame.f_lineno
-#         location = f"{filename}:{lineno}"
-#
-#     # Check if already seen
-#     warn_key = f"{category.__name__}:{message}:{location}"
-#
-#     if action == "once":
-#         if warn_key in _seen_warnings:
-#             return
-#         _seen_warnings.add(warn_key)
-#     elif action == "default":
-#         # Show first per location
-#         loc_key = f"{category.__name__}:{location}"
-#         if loc_key in _seen_warnings:
-#             return
-#         _seen_warnings.add(loc_key)
-#     elif action == "module":
-#         # Show once per module
-#         if frame is not None:
-#             module_key = f"{category.__name__}:{frame.f_code.co_filename}"
-#             if module_key in _seen_warnings:
-#                 return
-#             _seen_warnings.add(module_key)
-#
-#     # Emit via scitex.logging
-#     logger = _logging.getLogger("scitex.warnings")
-#     category_name = category.__name__
-#
-#     # Format: "UnitWarning: message"
-#     logger.warning(f"{category_name}: {message}")
-#
-#
-# # =============================================================================
-# # Convenience Warning Functions
-# # =============================================================================
-#
-#
-# def warn_deprecated(
-#     old_name: str, new_name: str, version: Optional[str] = None
-# ) -> None:
-#     """Issue a deprecation warning."""
-#     message = f"{old_name} is deprecated. Use {new_name} instead."
-#     if version:
-#         message += f" Will be removed in version {version}."
-#     warn(message, SciTeXDeprecationWarning, stacklevel=3)
-#
-#
-# def warn_performance(operation: str, suggestion: str) -> None:
-#     """Issue a performance warning."""
-#     message = f"Performance warning in {operation}: {suggestion}"
-#     warn(message, PerformanceWarning, stacklevel=3)
-#
-#
-# def warn_data_loss(operation: str, detail: str) -> None:
-#     """Issue a data loss warning."""
-#     message = f"Potential data loss in {operation}: {detail}"
-#     warn(message, DataLossWarning, stacklevel=3)
-#
-#
-# __all__ = [
-#     # Warning categories
-#     "SciTeXWarning",
-#     "UnitWarning",
-#     "StyleWarning",
-#     "SciTeXDeprecationWarning",
-#     "PerformanceWarning",
-#     "DataLossWarning",
-#     # Functions
-#     "warn",
-#     "filterwarnings",
-#     "resetwarnings",
-#     # Convenience functions
-#     "warn_deprecated",
-#     "warn_performance",
-#     "warn_data_loss",
-# ]
-#
-# # EOF
-
+# (source code preserved separately — see git history)
 # --------------------------------------------------------------------------------
 # End of Source Code from: /home/ywatanabe/proj/scitex-code/src/scitex/logging/_warnings.py
 # --------------------------------------------------------------------------------

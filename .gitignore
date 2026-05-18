@@ -9,3 +9,10 @@ build/
 .ruff_cache/
 *.so
 .env
+.venv/
+.coverage
+.coverage.*
+*.csh
+*.dat
+GITIGNORED/
+_sphinx_html/

@@ -12,217 +12,383 @@ import pytest
 class TestTee:
     """Test Tee class."""
 
-    def test_tee_init_stdout(self):
-        """Test Tee initialization with stdout."""
+    def test_tee_init_with_stdout_stores_stream_reference(self):
+        """`Tee(sys.stdout, path)` stores `sys.stdout` on `tee._stream`."""
+        # Arrange
         from scitex_logging._Tee import Tee
 
         with tempfile.TemporaryDirectory() as tmpdir:
             log_path = os.path.join(tmpdir, "test.log")
+            # Act
             tee = Tee(sys.stdout, log_path, verbose=False)
+            try:
+                stored = tee._stream
+            finally:
+                tee.close()
+        # Assert
+        assert stored is sys.stdout
 
-            assert tee._stream is sys.stdout
-            assert tee._log_path == log_path
-            assert tee._is_stderr is False
-            tee.close()
-
-    def test_tee_init_stderr(self):
-        """Test Tee initialization with stderr."""
+    def test_tee_init_with_stdout_stores_log_path(self):
+        """`Tee(stream, path)` stores `path` on `tee._log_path`."""
+        # Arrange
         from scitex_logging._Tee import Tee
 
         with tempfile.TemporaryDirectory() as tmpdir:
             log_path = os.path.join(tmpdir, "test.log")
+            # Act
+            tee = Tee(sys.stdout, log_path, verbose=False)
+            try:
+                stored = tee._log_path
+            finally:
+                tee.close()
+        # Assert
+        assert stored == log_path
+
+    def test_tee_init_with_stdout_marks_is_stderr_false(self):
+        """`Tee(sys.stdout, ...)` records `_is_stderr = False`."""
+        # Arrange
+        from scitex_logging._Tee import Tee
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_path = os.path.join(tmpdir, "test.log")
+            # Act
+            tee = Tee(sys.stdout, log_path, verbose=False)
+            try:
+                stored = tee._is_stderr
+            finally:
+                tee.close()
+        # Assert
+        assert stored is False
+
+    def test_tee_init_with_stderr_marks_is_stderr_true(self):
+        """`Tee(sys.stderr, ...)` records `_is_stderr = True`."""
+        # Arrange
+        from scitex_logging._Tee import Tee
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_path = os.path.join(tmpdir, "test.log")
+            # Act
             tee = Tee(sys.stderr, log_path, verbose=False)
+            try:
+                stored = tee._is_stderr
+            finally:
+                tee.close()
+        # Assert
+        assert stored is True
 
-            assert tee._stream is sys.stderr
-            assert tee._is_stderr is True
-            tee.close()
-
-    def test_tee_creates_log_file(self):
-        """Test that Tee creates the log file."""
+    def test_tee_init_creates_log_file_on_disk(self):
+        """Constructing a `Tee(...)` creates its log file on disk."""
+        # Arrange
         from scitex_logging._Tee import Tee
 
         with tempfile.TemporaryDirectory() as tmpdir:
             log_path = os.path.join(tmpdir, "test.log")
+            # Act
             tee = Tee(sys.stdout, log_path, verbose=False)
+            try:
+                file_exists = os.path.exists(log_path)
+            finally:
+                tee.close()
+        # Assert
+        assert file_exists is True
 
-            assert os.path.exists(log_path)
-            tee.close()
-
-    def test_tee_write_to_stream_and_file(self):
-        """Test that Tee writes to both stream and file."""
+    def test_tee_write_forwards_to_underlying_stream(self):
+        """`tee.write(text)` forwards the text to the wrapped stream."""
+        # Arrange
         from scitex_logging._Tee import Tee
 
         with tempfile.TemporaryDirectory() as tmpdir:
             log_path = os.path.join(tmpdir, "test.log")
             buffer = StringIO()
             tee = Tee(buffer, log_path, verbose=False)
+            try:
+                # Act
+                tee.write("test message")
+                tee.flush()
+                buffer_content = buffer.getvalue()
+            finally:
+                tee.close()
+        # Assert
+        assert "test message" in buffer_content
 
+    def test_tee_write_persists_text_to_log_file(self):
+        """`tee.write(text)` persists the text to the log file too."""
+        # Arrange
+        from scitex_logging._Tee import Tee
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_path = os.path.join(tmpdir, "test.log")
+            buffer = StringIO()
+            tee = Tee(buffer, log_path, verbose=False)
+            # Act
             tee.write("test message")
             tee.flush()
-
-            # Check stream
-            assert "test message" in buffer.getvalue()
-
-            # Check file
             tee.close()
             with open(log_path) as f:
                 content = f.read()
-            assert "test message" in content
+        # Assert
+        assert "test message" in content
 
-    def test_tee_stderr_filters_progress_bars(self):
-        """Test that stderr Tee filters progress bar patterns."""
+    def test_tee_stderr_logs_plain_error_message(self):
+        """A stderr-flagged Tee writes plain (non-progress) messages to disk."""
+        # Arrange
         from scitex_logging._Tee import Tee
 
         with tempfile.TemporaryDirectory() as tmpdir:
             log_path = os.path.join(tmpdir, "test.log")
             buffer = StringIO()
-            # Create a mock stderr
             tee = Tee(buffer, log_path, verbose=False)
             tee._is_stderr = True
-
-            # Regular message should be logged
+            # Act
             tee.write("error message\n")
-
-            # Progress bar pattern should be filtered
             tee.write("  50%|████      [A")
-
             tee.close()
             with open(log_path) as f:
                 content = f.read()
+        # Assert
+        assert "error message" in content
 
-            assert "error message" in content
-            # Progress bar should be filtered for stderr
-            assert "50%" not in content
+    def test_tee_stderr_filters_progress_bar_pattern(self):
+        """A stderr-flagged Tee filters out tqdm-style progress lines."""
+        # Arrange
+        from scitex_logging._Tee import Tee
 
-    def test_tee_flush(self):
-        """Test Tee flush method."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_path = os.path.join(tmpdir, "test.log")
+            buffer = StringIO()
+            tee = Tee(buffer, log_path, verbose=False)
+            tee._is_stderr = True
+            # Act
+            tee.write("error message\n")
+            tee.write("  50%|████      [A")
+            tee.close()
+            with open(log_path) as f:
+                content = f.read()
+        # Assert
+        assert "50%" not in content
+
+    def test_tee_flush_does_not_raise(self):
+        """`tee.flush()` is callable and returns without raising."""
+        # Arrange
         from scitex_logging._Tee import Tee
 
         with tempfile.TemporaryDirectory() as tmpdir:
             log_path = os.path.join(tmpdir, "test.log")
             tee = Tee(sys.stdout, log_path, verbose=False)
+            try:
+                tee.write("test")
+                # Act
+                returned = tee.flush()
+            finally:
+                tee.close()
+        # Assert
+        assert returned is None
 
-            tee.write("test")
-            tee.flush()  # Should not raise
-            tee.close()
-
-    def test_tee_isatty(self):
-        """Test Tee isatty method."""
+    def test_tee_isatty_returns_boolean_value(self):
+        """`tee.isatty()` returns a boolean (forwards to underlying stream)."""
+        # Arrange
         from scitex_logging._Tee import Tee
 
         with tempfile.TemporaryDirectory() as tmpdir:
             log_path = os.path.join(tmpdir, "test.log")
             tee = Tee(sys.stdout, log_path, verbose=False)
+            try:
+                # Act
+                result = tee.isatty()
+            finally:
+                tee.close()
+        # Assert
+        assert isinstance(result, bool)
 
-            # Should return same as stream
-            result = tee.isatty()
-            assert isinstance(result, bool)
-            tee.close()
-
-    def test_tee_fileno(self):
-        """Test Tee fileno method."""
+    def test_tee_fileno_returns_integer_value(self):
+        """`tee.fileno()` returns an int (forwards to underlying stream)."""
+        # Arrange
         from scitex_logging._Tee import Tee
 
         with tempfile.TemporaryDirectory() as tmpdir:
             log_path = os.path.join(tmpdir, "test.log")
             tee = Tee(sys.stdout, log_path, verbose=False)
+            try:
+                # Act
+                result = tee.fileno()
+            finally:
+                tee.close()
+        # Assert
+        assert isinstance(result, int)
 
-            # Should return stream's fileno
-            result = tee.fileno()
-            assert isinstance(result, int)
-            tee.close()
-
-    def test_tee_buffer_property(self):
-        """Test Tee buffer property."""
+    def test_tee_buffer_property_returns_underlying_stream_buffer(self):
+        """`tee.buffer` exposes the wrapped stream's `.buffer`."""
+        # Arrange
         from scitex_logging._Tee import Tee
 
         with tempfile.TemporaryDirectory() as tmpdir:
             log_path = os.path.join(tmpdir, "test.log")
             tee = Tee(sys.stdout, log_path, verbose=False)
+            try:
+                # Act
+                buffer = tee.buffer
+            finally:
+                tee.close()
+        # Assert
+        assert buffer is sys.stdout.buffer
 
-            # Should return stream's buffer
-            buffer = tee.buffer
-            assert buffer is sys.stdout.buffer
-            tee.close()
-
-    def test_tee_close(self):
-        """Test Tee close method."""
+    def test_tee_close_sets_log_file_attribute_to_none(self):
+        """`tee.close()` sets `_log_file` to `None`."""
+        # Arrange
         from scitex_logging._Tee import Tee
 
         with tempfile.TemporaryDirectory() as tmpdir:
             log_path = os.path.join(tmpdir, "test.log")
             tee = Tee(sys.stdout, log_path, verbose=False)
-
+            # Act
             tee.close()
-            assert tee._log_file is None
+            stored = tee._log_file
+        # Assert
+        assert stored is None
 
-    def test_tee_close_idempotent(self):
-        """Test that Tee close can be called multiple times."""
+    def test_tee_close_called_twice_is_idempotent(self):
+        """`tee.close()` called twice does not raise on the second call."""
+        # Arrange
         from scitex_logging._Tee import Tee
 
         with tempfile.TemporaryDirectory() as tmpdir:
             log_path = os.path.join(tmpdir, "test.log")
             tee = Tee(sys.stdout, log_path, verbose=False)
-
             tee.close()
-            tee.close()  # Should not raise
+            # Act
+            returned = tee.close()
+        # Assert
+        assert returned is None
 
-    def test_tee_handles_invalid_log_path(self):
-        """Test Tee handles invalid log path gracefully."""
+    def test_tee_handles_unwritable_log_path_with_none_file(self):
+        """A path that cannot be opened leaves `_log_file = None`."""
+        # Arrange
         from scitex_logging._Tee import Tee
 
-        # Path that cannot be created
+        # Act
         tee = Tee(sys.stdout, "/nonexistent/deep/path/test.log", verbose=False)
-        assert tee._log_file is None
+        stored = tee._log_file
+        # Assert
+        assert stored is None
 
 
 class TestTeeFunction:
     """Test tee() function."""
 
-    def test_tee_function_returns_tuple(self):
-        """Test that tee() returns a tuple of Tee objects."""
+    def test_tee_function_returns_a_tuple(self):
+        """`tee(sys, sdir=...)` returns a Python tuple."""
+        # Arrange
+        from scitex_logging._Tee import tee
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Act
+            result = tee(sys, sdir=tmpdir, verbose=False)
+            try:
+                is_tuple = isinstance(result, tuple)
+            finally:
+                result[0].close()
+                result[1].close()
+        # Assert
+        assert is_tuple is True
+
+    def test_tee_function_returns_two_element_tuple(self):
+        """`tee(sys, sdir=...)` returns a length-2 tuple (stdout, stderr)."""
+        # Arrange
+        from scitex_logging._Tee import tee
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Act
+            result = tee(sys, sdir=tmpdir, verbose=False)
+            try:
+                length = len(result)
+            finally:
+                result[0].close()
+                result[1].close()
+        # Assert
+        assert length == 2
+
+    def test_tee_function_first_element_is_tee_instance(self):
+        """`tee(sys, sdir=...)[0]` is a Tee instance (stdout wrapper)."""
+        # Arrange
         from scitex_logging._Tee import Tee, tee
 
         with tempfile.TemporaryDirectory() as tmpdir:
+            # Act
             result = tee(sys, sdir=tmpdir, verbose=False)
+            try:
+                is_tee = isinstance(result[0], Tee)
+            finally:
+                result[0].close()
+                result[1].close()
+        # Assert
+        assert is_tee is True
 
-            assert isinstance(result, tuple)
-            assert len(result) == 2
-            assert isinstance(result[0], Tee)
-            assert isinstance(result[1], Tee)
+    def test_tee_function_second_element_is_tee_instance(self):
+        """`tee(sys, sdir=...)[1]` is a Tee instance (stderr wrapper)."""
+        # Arrange
+        from scitex_logging._Tee import Tee, tee
 
-            result[0].close()
-            result[1].close()
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Act
+            result = tee(sys, sdir=tmpdir, verbose=False)
+            try:
+                is_tee = isinstance(result[1], Tee)
+            finally:
+                result[0].close()
+                result[1].close()
+        # Assert
+        assert is_tee is True
 
-    def test_tee_function_creates_log_files(self):
-        """Test that tee() creates log files."""
+    def test_tee_function_creates_stdout_log_on_disk(self):
+        """`tee(sys, sdir=...)` creates `<sdir>/logs/stdout.log` on disk."""
+        # Arrange
         from scitex_logging._Tee import tee
 
         with tempfile.TemporaryDirectory() as tmpdir:
             stdout_tee, stderr_tee = tee(sys, sdir=tmpdir, verbose=False)
+            try:
+                expected = os.path.join(tmpdir, "logs", "stdout.log")
+                # Act
+                file_exists = os.path.exists(expected)
+            finally:
+                stdout_tee.close()
+                stderr_tee.close()
+        # Assert
+        assert file_exists is True
 
-            logs_dir = os.path.join(tmpdir, "logs")
-            stdout_log = os.path.join(logs_dir, "stdout.log")
-            stderr_log = os.path.join(logs_dir, "stderr.log")
-
-            assert os.path.exists(stdout_log)
-            assert os.path.exists(stderr_log)
-
-            stdout_tee.close()
-            stderr_tee.close()
-
-    def test_tee_function_creates_logs_directory(self):
-        """Test that tee() creates logs subdirectory."""
+    def test_tee_function_creates_stderr_log_on_disk(self):
+        """`tee(sys, sdir=...)` creates `<sdir>/logs/stderr.log` on disk."""
+        # Arrange
         from scitex_logging._Tee import tee
 
         with tempfile.TemporaryDirectory() as tmpdir:
             stdout_tee, stderr_tee = tee(sys, sdir=tmpdir, verbose=False)
+            try:
+                expected = os.path.join(tmpdir, "logs", "stderr.log")
+                # Act
+                file_exists = os.path.exists(expected)
+            finally:
+                stdout_tee.close()
+                stderr_tee.close()
+        # Assert
+        assert file_exists is True
 
-            logs_dir = os.path.join(tmpdir, "logs")
-            assert os.path.isdir(logs_dir)
+    def test_tee_function_creates_logs_subdirectory(self):
+        """`tee(sys, sdir=...)` creates the `<sdir>/logs/` directory."""
+        # Arrange
+        from scitex_logging._Tee import tee
 
-            stdout_tee.close()
-            stderr_tee.close()
+        with tempfile.TemporaryDirectory() as tmpdir:
+            stdout_tee, stderr_tee = tee(sys, sdir=tmpdir, verbose=False)
+            try:
+                logs_dir = os.path.join(tmpdir, "logs")
+                # Act
+                dir_exists = os.path.isdir(logs_dir)
+            finally:
+                stdout_tee.close()
+                stderr_tee.close()
+        # Assert
+        assert dir_exists is True
 
 
 if __name__ == "__main__":
@@ -235,202 +401,7 @@ if __name__ == "__main__":
 # --------------------------------------------------------------------------------
 # Start of Source Code from: /home/ywatanabe/proj/scitex-code/src/scitex/logging/_Tee.py
 # --------------------------------------------------------------------------------
-# #!/usr/bin/env python3
-# # -*- coding: utf-8 -*-
-# # Timestamp: "2025-10-13 07:12:49 (ywatanabe)"
-# # File: /home/ywatanabe/proj/scitex_repo/src/scitex/logging/_Tee.py
-# # ----------------------------------------
-# from __future__ import annotations
-# import os
-#
-# __FILE__ = "./src/scitex/logging/_Tee.py"
-# __DIR__ = os.path.dirname(__FILE__)
-# # ----------------------------------------
-#
-# THIS_FILE = "/home/ywatanabe/proj/scitex_repo/src/scitex/gen/_tee.py"
-#
-# """
-# Functionality:
-#     * Redirects and logs standard output and error streams
-#     * Filters progress bar outputs from stderr logging
-#     * Maintains original stdout/stderr functionality while logging
-# Input:
-#     * System stdout/stderr streams
-#     * Output file paths for logging
-# Output:
-#     * Wrapped stdout/stderr objects with logging capability
-#     * Log files containing stdout and stderr outputs
-# Prerequisites:
-#     * Python 3.6+
-#     * scitex package for path handling and colored printing
-# """
-#
-# """Imports"""
-# import os as _os
-# import re
-# import sys
-# from typing import Any, TextIO
-#
-# from scitex.str._clean_path import clean_path
-# from scitex.str._printc import printc
-#
-# """Functions & Classes"""
-#
-#
-# def _get_logger():
-#     """Get logger lazily to avoid circular import during module initialization."""
-#     import scitex_logging as logging
-#
-#     return logging.getLogger(__name__)
-#
-#
-# class Tee:
-#     def __init__(self, stream: TextIO, log_path: str, verbose=True) -> None:
-#         self.verbose = verbose
-#         self._stream = stream
-#         self._log_path = log_path
-#         try:
-#             self._log_file = open(log_path, "w", buffering=1)  # Line buffering
-#             if verbose:
-#                 # Show where logs are being saved using scitex logging
-#                 logger = _get_logger()
-#                 stream_name = "stderr" if stream is sys.stderr else "stdout"
-#                 logger.debug(f"Tee [{stream_name}]: {log_path}")
-#         except Exception as e:
-#             printc(f"Failed to open log file {log_path}: {e}", c="red")
-#             self._log_file = None
-#         self._is_stderr = stream is sys.stderr
-#
-#     def write(self, data: Any) -> None:
-#         self._stream.write(data)
-#         if self._log_file is not None:
-#             if self._is_stderr:
-#                 if isinstance(data, str) and not re.match(
-#                     r"^[\s]*[0-9]+%.*\[A*$", data
-#                 ):
-#                     self._log_file.write(data)
-#                     self._log_file.flush()  # Ensure immediate write
-#             else:
-#                 self._log_file.write(data)
-#                 self._log_file.flush()  # Ensure immediate write
-#
-#     def flush(self) -> None:
-#         self._stream.flush()
-#         if self._log_file is not None:
-#             self._log_file.flush()
-#
-#     def isatty(self) -> bool:
-#         return self._stream.isatty()
-#
-#     def fileno(self) -> int:
-#         return self._stream.fileno()
-#
-#     @property
-#     def buffer(self):
-#         return self._stream.buffer
-#
-#     def close(self):
-#         """Explicitly close the log file."""
-#         if hasattr(self, "_log_file") and self._log_file is not None:
-#             try:
-#                 self._log_file.flush()
-#                 self._log_file.close()
-#                 if self.verbose:
-#                     # Use lazy logger to avoid circular import
-#                     logger = _get_logger()
-#                     logger.debug(f"Tee: Closed log file: {self._log_path}")
-#                 self._log_file = None  # Prevent double-close
-#             except Exception:
-#                 pass
-#
-#     def __del__(self):
-#         # Only attempt cleanup if Python is not shutting down
-#         # This prevents "Exception ignored" errors during interpreter shutdown
-#         if hasattr(self, "_log_file") and self._log_file is not None:
-#             try:
-#                 # Check if the file object is still valid
-#                 if hasattr(self._log_file, "closed") and not self._log_file.closed:
-#                     self.close()
-#             except Exception:
-#                 # Silently ignore exceptions during cleanup
-#                 pass
-#
-#
-# def tee(sys, sdir=None, verbose=True):
-#     """Redirects stdout and stderr to both console and log files.
-#
-#     Example
-#     -------
-#     >>> import sys
-#     >>> sys.stdout, sys.stderr = tee(sys)
-#     >>> print("abc")  # stdout
-#     >>> print(1 / 0)  # stderr
-#
-#     Parameters
-#     ----------
-#     sys_module : module
-#         System module containing stdout and stderr
-#     sdir : str, optional
-#         Directory for log files
-#     verbose : bool, default=True
-#         Whether to print log file locations
-#
-#     Returns
-#     -------
-#     tuple[Any, Any]
-#         Wrapped stdout and stderr objects
-#     """
-#     import inspect
-#
-#     ####################
-#     ## Determine sdir
-#     ## DO NOT MODIFY THIS
-#     ####################
-#     if sdir is None:
-#         THIS_FILE = inspect.stack()[1].filename
-#         if "ipython" in THIS_FILE:
-#             THIS_FILE = f"/tmp/{_os.getenv('USER')}.py"
-#         sdir = clean_path(_os.path.splitext(THIS_FILE)[0] + "_out")
-#
-#     sdir = _os.path.join(sdir, "logs/")
-#     _os.makedirs(sdir, exist_ok=True)
-#
-#     spath_stdout = sdir + "stdout.log"
-#     spath_stderr = sdir + "stderr.log"
-#     sys_stdout = Tee(sys.stdout, spath_stdout)
-#     sys_stderr = Tee(sys.stderr, spath_stderr)
-#
-#     if verbose:
-#         message = f"Standard output/error are being logged at:\n\t{spath_stdout}\n\t{spath_stderr}"
-#         logger = _get_logger()
-#         logger.info(message)
-#         # printc(message)
-#
-#     return sys_stdout, sys_stderr
-#
-#
-# if __name__ == "__main__":
-#     # Argument Parser
-#     import matplotlib.pyplot as plt
-#
-#     import scitex
-#
-#     main = tee
-#
-#     # import argparse
-#     # parser = argparse.ArgumentParser(description='')
-#     # parser.add_argument('--var', '-v', type=int, default=1, help='')
-#     # parser.add_argument('--flag', '-f', action='store_true', default=False, help='')
-#     # args = parser.parse_args()
-#     # Main
-#     CONFIG, sys.stdout, sys.stderr, plt, CC = scitex.session.start(
-#         sys, plt, verbose=False
-#     )
-#     main(sys, CONFIG["SDIR"])
-#     scitex.session.close(CONFIG, verbose=False, notify=False)
-#
-# # EOF
-
+# (source code preserved separately — see git history)
 # --------------------------------------------------------------------------------
 # End of Source Code from: /home/ywatanabe/proj/scitex-code/src/scitex/logging/_Tee.py
 # --------------------------------------------------------------------------------
