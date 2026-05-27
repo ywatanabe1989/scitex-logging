@@ -6,18 +6,47 @@ import logging
 import logging.handlers
 import os
 import sys
+import warnings
 from datetime import datetime
 from pathlib import Path
 
 from ._formatters import SciTeXConsoleFormatter, SciTeXFileFormatter
 
+_PKG_SHORT = "logging"
+
+# ---------------------------------------------------------------------------
+# Deprecation / migration tracking (one-time warning per process)
+# ---------------------------------------------------------------------------
+_MIGRATION_WARNED = False
+
 
 def _get_scitex_dir() -> Path:
-    """Get SCITEX_DIR with priority: env → default (~/.scitex)."""
+    """Get SCITEX_DIR with priority: env -> default (~/.scitex)."""
     env_val = os.getenv("SCITEX_DIR")
     if env_val:
         return Path(env_val).expanduser()
     return Path.home() / ".scitex"
+
+
+def _get_pkg_runtime_dir() -> Path:
+    """Return ``<scitex_dir>/<pkg_short>/runtime/``.
+
+    Resolves ``SCITEX_DIR`` (env var) or ``~/.scitex``, appends the
+    canonical package-scoped runtime path.  The directory is **not**
+    created here -- :func:`get_default_log_path` creates it lazily.
+    """
+    return _get_scitex_dir() / _PKG_SHORT / "runtime"
+
+
+def _get_old_logs_dir() -> Path:
+    """Return the legacy (pre-2026) logs directory.
+
+    Before the ecosystem-wide local-state layout was adopted,
+    ``scitex-logging`` wrote directly to ``~/.scitex/logs/``.  This
+    function returns that legacy path so migrations can find and move
+    old files.
+    """
+    return _get_scitex_dir() / "logs"
 
 
 class LazyStderrStreamHandler(logging.StreamHandler):
@@ -98,18 +127,70 @@ def create_file_handler(
     return handler
 
 
+def _migrate_legacy_logs() -> None:
+    """Move log files from the legacy ``~/.scitex/logs/`` layout.
+
+    Before 2026 the default path was ``~/.scitex/logs/scitex-YYYY-MM-DD.log``.
+    The canonical layout is ``~/.scitex/logging/runtime/scitex-YYYY-MM-DD.log``.
+    On the first call this function moves any existing files and emits a
+    one-time ``SciTeXDeprecationWarning``.
+
+    The shim is kept for one minor version (per ecosystem convention).
+    """
+    global _MIGRATION_WARNED
+    if _MIGRATION_WARNED:
+        return
+
+    old_dir = _get_old_logs_dir()
+    new_dir = _get_pkg_runtime_dir()
+    if not old_dir.is_dir():
+        _MIGRATION_WARNED = True
+        return
+
+    new_dir.mkdir(parents=True, exist_ok=True)
+    moved = 0
+    for p in sorted(old_dir.glob("scitex-*.log*")):
+        dest = new_dir / p.name
+        if not dest.exists():
+            p.rename(dest)
+            moved += 1
+    # Remove old dir if empty
+    try:
+        old_dir.rmdir()
+    except OSError:
+        pass
+
+    if moved:
+        from ._warnings import SciTeXDeprecationWarning  # fmt: skip
+
+        warnings.warn(
+            "scitex-logging: log files have moved from "
+            f"{old_dir}/ to {new_dir}/. "
+            "Set $SCITEX_DIR to relocate the entire tree.",
+            SciTeXDeprecationWarning,
+            stacklevel=2,
+        )
+    _MIGRATION_WARNED = True
+
+
 def get_default_log_path():
     """Get the default log file path for SciTeX.
 
-    Uses SCITEX_DIR environment variable with fallback to ~/.scitex.
-    Supports .env file loading for configuration.
-    """
-    scitex_dir = _get_scitex_dir()
-    logs_dir = scitex_dir / "logs"
+    Returns a path under ``~/.scitex/logging/runtime/`` (or
+    ``$SCITEX_DIR/logging/runtime/`` when ``SCITEX_DIR`` is set).
 
-    # Create timestamped log file
+    On first call, legacy log files from the old ``~/.scitex/logs/``
+    location are automatically migrated with a deprecation warning.
+
+    Returns:
+        str: Absolute path to the current day's log file.
+    """
+    _migrate_legacy_logs()
+    runtime_dir = _get_pkg_runtime_dir()
+    runtime_dir.mkdir(parents=True, exist_ok=True)
+
     timestamp = datetime.now().strftime("%Y-%m-%d")
-    log_file = logs_dir / f"scitex-{timestamp}.log"
+    log_file = runtime_dir / f"scitex-{timestamp}.log"
 
     return str(log_file)
 
